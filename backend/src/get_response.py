@@ -23,6 +23,13 @@ detector = LanguageDetectorBuilder.from_all_languages().build()
 # FastAPI 호출출
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://ephemeral-salmiakki-189581.netlify.app"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 def detect_language(text):
     """텍스트의 언어를 감지"""

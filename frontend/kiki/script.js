@@ -1059,13 +1059,12 @@ document.getElementById("userInput").addEventListener("keypress", function (e) {
 });
 
 async function getBotResponse(userMessage) {
-  const response = await fetch('https://your-backend-or-openai-endpoint', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ prompt: userMessage })
+  const url = 'http://128.134.103.140:8000/ask?question=' + encodeURIComponent(userMessage);
+
+  const response = await fetch(url, {
+    method: 'GET'
   });
+
   const data = await response.json();
   return data.answer; // 응답 JSON 형식에 따라 변경
 }
