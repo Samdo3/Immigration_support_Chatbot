@@ -25,7 +25,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://project-2nd-team3-c7eafmbufdc7a3ex.eastus-01.azurewebsites.net/"],  # 배포 시 특정 도메인으로 제한하는 것이 바람직
+    allow_origins=["*"],  # 배포 시 특정 도메인으로 제한하는 것이 바람직
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
