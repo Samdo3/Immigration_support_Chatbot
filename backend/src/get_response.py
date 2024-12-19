@@ -23,13 +23,6 @@ detector = LanguageDetectorBuilder.from_all_languages().build()
 # FastAPI 호출출
 app = FastAPI()
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # 배포 시 특정 도메인으로 제한하는 것이 바람직
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 
 def detect_language(text):
     """텍스트의 언어를 감지"""
