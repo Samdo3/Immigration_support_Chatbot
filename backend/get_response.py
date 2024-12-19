@@ -187,7 +187,3 @@ def ask_endpoint(question: str):
     answer=ask_legal_question(question)
     return {"answer": answer}
 
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
