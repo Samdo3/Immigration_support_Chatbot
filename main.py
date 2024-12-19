@@ -191,7 +191,7 @@ def ask_legal_question(user_input):
         print(f"Error encountered: {e}")
         return fallback_to_gpt(user_input, detected_language)
     
-@app.get("/ask")
+@app.get("/")
 def ask_endpoint(question: str):
     answer=ask_legal_question(question)
     return {"answer": answer}
