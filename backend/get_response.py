@@ -185,7 +185,7 @@ def ask_legal_question(user_input):
 @app.get("/ask")
 def ask_endpoint(question: str):
     answer=ask_legal_question(question)
-    return {"answer": answer}
+    return {"answer": "answer"}
 
 
 
