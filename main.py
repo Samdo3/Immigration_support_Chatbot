@@ -29,17 +29,6 @@ SEMANTIC_CONFIGURATION = "keyword-semantic"
 # 언어 감지기 초기화
 detector = LanguageDetectorBuilder.from_all_languages().build()
 
-# FastAPI 호출출
-app = FastAPI()
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # 배포 시 특정 도메인으로 제한하는 것이 바람직
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
 def detect_language(text):
     """텍스트의 언어를 감지"""
     detected_language = detector.detect_language_of(text)
@@ -191,9 +180,22 @@ def ask_legal_question(user_input):
         print(f"Error encountered: {e}")
         return fallback_to_gpt(user_input, detected_language)
     
-@app.get("/")
-def ask_endpoint(question: str):
-    answer=ask_legal_question(question)
-    # return {"answer": answer}
-    return {"message": "Hello from FastAPI on Azure App Service"}
+ # FastAPI 호출출
+app = FastAPI()
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],  # 배포 시 특정 도메인으로 제한하는 것이 바람직
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+# @app.get("/")
+# def ask_endpoint(question: str):
+#     answer=ask_legal_question(question)
+#     return {"answer": answer}
+
+@app.get("/")
+def ask_endpoint():
+    return {"message": "Hello from FastAPI on Azure App Service"}
