@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+
+    <link
+      href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="main-container">
+      <!-- 과거 이력 확인 및 용어 정리 -->
+      <div class="sidebar">
+        <button id="btnmain" class="main-btn">메인</button>
+        <button id="btnword" class="word-btn">용어</button>
+      </div>
+
+      <button id="btnlist" class="list-btn">📌</button>
+      <!-- 과거이력 목록 창-->
+      <div id="historyModal" class="hisroty-modal">
+        <h2>대화요약</h2>
+        <ul id="historyList">
+          <!--AI가 생성한 요약과 키워드 항목-->
+        </ul>
+        <button id="closeHistoryModal" class="close-modal-btn">닫기</button>
+      </div>
+
+      <!-- 대화 내용 표시 영역 (이건 혹시 몰라 만들었던..)
+            <div id="conversationDetails" class="conversation-details">
+              <h3>대화 내용</h3>
+              <div id="conversationContent">
+                <!-클릭한 대화의 세부 내용 표시 
+              </div>
+            </div>
+            -->
+
+      <!-- 챗봇 영역 -->
+      <div id="chatContainer" class="chat-container">
+        <!-- 로고 -->
+        <div class="logo">LawBot</div>
+        <div id="chatbox" class="chat-box"></div>
+        <!-- 입력 컨테이너 -->
+        <div class="input-container">
+          <!-- 자동 응답 버튼 -->
+          <div class="quick-reply-buttons">
+            <button
+              class="quick-reply"
+              data-topic="사용방법"
+              id="btnGuide"
+              data-topic="저희 LawBot의 사용 방법을 안내해드릴게요."
+            >
+              사용 방법 💡
+            </button>
+            <button
+              class="quick-reply"
+              data-topic="이민준비"
+              id="btnPrep"
+              data-topic="이민을 준비하시는 과정에 도움을 드릴 수 있는 법률 정보를 안내해드릴게요."
+            >
+              이민준비 ✔️
+            </button>
+            <button class="quick-reply" data-topic="임대차계약" id="btnLease">
+              임대차 계약 🏠
+            </button>
+            <button class="quick-reply" data-topic="4대보험" id="btnInsurance">
+              4대 보험 ⚖️
+            </button>
+            <button class="quick-reply" data-topic="노동법" id="btnLaborLaw">
+              노동법 💼
+            </button>
+          </div>
+          <!-- 사용자 입력창 및 전송 버튼 -->
+          <div class="input-row">
+            <!-- 언어 변경 및 음성 인식 버튼 -->
+            <div id="lang"><button id="lang-btn" class="lang">🌐</button></div>
+            <input
+              type="text"
+              class="input-box"
+              id="userInput"
+              placeholder="질문을 입력해주세요 !"
+              onkeyup="checkEnter(event)"
+            />
+            <button id="voiceButton" class="voice">🎤</button>
+            <button class="send-btn" id="sendButton">전송</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 언어 선택 모달 -->
+      <div id="languageModal" class="modal">
+        <div class="modal-content">
+          <ul id="languageList">
+            <li data-lang="ko">한국어</li>
+            <li data-lang="en">English</li>
+            <li data-lang="hi">हिन्दी</li>
+            <li data-lang="vi">Tiếng Việt</li>
+            <li data-lang="ru">Русский</li>
+            <li data-lang="zh">中文</li>
+          </ul>
+          <button id="closeModal">닫기</button>
+        </div>
+      </div>
+
+      <!-- 질문 답변 저장 -->
+      <div class="choice-container">
+        <button class="log-btn">+</button>
+      </div>
+    </div>
+  </body>
+</html>
