@@ -1058,6 +1058,18 @@ document.getElementById("userInput").addEventListener("keypress", function (e) {
   }
 });
 
+async function getBotResponse(userMessage) {
+  const response = await fetch('https://your-backend-or-openai-endpoint', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ prompt: userMessage })
+  });
+  const data = await response.json();
+  return data.answer; // 응답 JSON 형식에 따라 변경
+}
+
 // 메시지 전송 함수
 function sendMessage() {
   const inputField = document.getElementById("userInput");
