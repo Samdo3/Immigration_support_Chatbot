@@ -194,5 +194,6 @@ def ask_legal_question(user_input):
 @app.get("/")
 def ask_endpoint(question: str):
     answer=ask_legal_question(question)
-    return {"answer": answer}
+    # return {"answer": answer}
+    return {"message": "Hello from FastAPI on Azure App Service"}
 
