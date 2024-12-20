@@ -181,7 +181,8 @@ def ask_legal_question(user_input):
     except Exception as e:
         print(f"Error encountered: {e}")
         return fallback_to_gpt(user_input, detected_language)
-    
+
+# FAST API   
 @app.get("/ask")
 def ask_endpoint(question: str):
     answer=ask_legal_question(question)

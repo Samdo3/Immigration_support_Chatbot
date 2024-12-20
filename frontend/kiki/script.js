@@ -1,7 +1,35 @@
-// 초기화
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("페이지 로드 완료");
+//----------------------화면 전환 -------------------------//
+const btnMain = document.querySelector(".main-btn");
+const btnWord = document.querySelector(".word-btn");
+const chatContainer = document.getElementById("chatContainer");
+const wordScreen = document.getElementById("wordScreen");
+
+function setActiveButton(button) {
+  // 모든 버튼의 배경색 초기화
+  const buttons = [btnMain, btnWord];
+  buttons.forEach((btn) => {
+    btn.classList.remove("active");
+  });
+
+  // 클릭된 버튼에 배경색 변경
+  button.classList.add("active");
+}
+
+setActiveButton(btnMain);
+
+btnMain.addEventListener("click", () => {
+  setActiveButton(btnMain);
+  chatContainer.style.display = "block";
+  wordScreen.style.display = "none";
 });
+
+btnWord.addEventListener("click", () => {
+  setActiveButton(btnWord);
+  chatContainer.style.display = "none";
+  wordScreen.style.display = "block";
+});
+
+//----------------------언어 변경 -------------------------//
 
 // 언어별 번역 데이터
 const translations = {
@@ -14,8 +42,6 @@ const translations = {
     btnLaborLaw: "노동법 💼",
     btnsend: "전송",
     btnanswer: "질문을 입력해주세요 !",
-    btnword: "용어",
-    btnmain: "메인",
   },
   en: {
     welcomeMessage: "Hello! How can I assist you?",
@@ -26,8 +52,6 @@ const translations = {
     btnLaborLaw: "Labor Law 💼",
     btnsend: "Send",
     btnanswer: "Please enter your answer!",
-    btnword: "Word",
-    btnmain: "Main",
   },
   hi: {
     welcomeMessage: "नमस्ते! मैं आपकी किस प्रकार मदद कर सकता हूँ?",
@@ -38,8 +62,6 @@ const translations = {
     btnLaborLaw: "श्रम कानून 💼",
     btnsend: "भेजना",
     btnanswer: "कृपया अपना प्रश्न दर्ज करें!",
-    btnword: "शब्दावली",
-    btnmain: "मुख्य",
   },
   vi: {
     welcomeMessage: "Xin chào! Tôi có thể giúp gì cho bạn?",
@@ -50,8 +72,6 @@ const translations = {
     btnLaborLaw: "Luật lao động 💼",
     btnsend: "gửi",
     btnanswer: "Vui lòng nhập câu hỏi của bạn!",
-    btnword: "từ",
-    btnmain: "chủ yếu",
   },
   ru: {
     welcomeMessage: "Здравствуйте! Как я могу помочь вам?",
@@ -62,8 +82,6 @@ const translations = {
     btnLaborLaw: "Трудовое законодательство 💼",
     btnsend: "отправлять",
     btnanswer: "Пожалуйста, введите свой ответ!",
-    btnword: "слово",
-    btnmain: "основной",
   },
   zh: {
     welcomeMessage: "你好！我能为你做些什么？",
@@ -74,8 +92,6 @@ const translations = {
     btnLaborLaw: "劳动法 💼",
     btnsend: "发送",
     btnanswer: "请输入您的答案!",
-    btnword: "单词",
-    btnmain: "主要的",
   },
   th: {
     welcomeMessage: "สวัสดี! ฉันช่วยอะไรคุณได้บ้าง?",
@@ -86,8 +102,6 @@ const translations = {
     btnLaborLaw: "กฎหมายแรงงาน 💼",
     btnsend: "ส่ง",
     btnanswer: "กรุณาป้อนคำตอบของคุณ!",
-    btnword: "คำ",
-    btnmain: "หน้าหลัก",
   },
   uz: {
     welcomeMessage: "Salom! Qanday yordam bera olaman?",
@@ -98,8 +112,6 @@ const translations = {
     btnLaborLaw: "Mehnat qonuni 💼",
     btnsend: "Yuborish",
     btnanswer: "Iltimos, javobingizni kiriting!",
-    btnword: "So'z",
-    btnmain: "Asosiy",
   },
   tl: {
     welcomeMessage: "Kamusta! Paano kita matutulungan?",
@@ -110,8 +122,6 @@ const translations = {
     btnLaborLaw: "Batas sa Paggawa 💼",
     btnsend: "Ipadala",
     btnanswer: "Pakilagay ang iyong sagot!",
-    btnword: "Salita",
-    btnmain: "Pangunahing",
   },
   ja: {
     welcomeMessage: "こんにちは！どのようにお手伝いできますか？",
@@ -122,8 +132,6 @@ const translations = {
     btnLaborLaw: "労働法 💼",
     btnsend: "送信",
     btnanswer: "回答を入力してください！",
-    btnword: "単語",
-    btnmain: "メイン",
   },
 };
 // 현재 언어
@@ -180,9 +188,7 @@ function updateLanguage() {
   document.getElementById("btnLease").textContent = langData.btnLease;
   document.getElementById("btnInsurance").textContent = langData.btnInsurance;
   document.getElementById("btnLaborLaw").textContent = langData.btnLaborLaw;
-  document.getElementById("btnmain").textContent = langData.btnmain;
   document.getElementById("sendButton").textContent = langData.btnsend;
-  document.getElementById("btnword").textContent = langData.btnword;
 }
 
 // 언어 선택 변경 이벤트
@@ -196,7 +202,6 @@ function addMessage(text, type) {
   messageBox.textContent = text;
 
   // 채팅 영역에 추가
-  const chatContainer = document.getElementById("chatContainer");
   chatContainer.appendChild(messageBox);
 }
 document.getElementById("languageList").addEventListener("click", (event) => {
@@ -311,256 +316,473 @@ const responses = {
     
     ▶ 启用多语言支持
     选择您偏好的语言，以该语言接收回答。`,
+    ja: `Law Botの使用方法をご案内します。
+        ▶チャットボットにアクセス  
+        ウェブサイトまたはモバイルアプリからアクセスし、簡単な会員登録を行うだけで利用可能です。
+
+        ▶質問を入力  
+        知りたい内容を自由に入力してください。  
+        例: 「E-7ビザの申請要件は何ですか？」「賃貸契約時の注意点は？」「雇用主が給与を支払わない場合、どうすればよいですか？」
+
+        ▶カスタマイズされた回答を受け取る  
+        チャットボットが簡潔で実用的な回答を提供し、必要に応じて関連機関のリンクを案内します。
+
+        ▶多言語対応の有効化  
+        希望する言語を選択すると、その言語で回答が提供されます。`,
+    tl: `Paano Gamitin ang Law Bot:
+
+        ▶Mag-access sa Chatbot  
+        Mag-log in gamit ang website o mobile app at gumawa ng simpleng account upang magamit ito.
+
+        ▶Ilagay ang Iyong Tanong  
+        I-type ang anumang tanong na nais mong sagutin.  
+        Halimbawa: "Ano ang mga kinakailangan sa pag-apply ng E-7 visa?", "Ano ang mga dapat tandaan sa pagkuha ng kontrata sa pag-upa?", "Ano ang dapat gawin kung hindi nagbabayad ng sahod ang employer?"
+
+        ▶Makakuha ng Nakaangkop na Sagot  
+        Nagbibigay ang chatbot ng maikli at praktikal na sagot at nag-aalok ng link sa kaugnay na ahensya kung kinakailangan.
+
+        ▶I-activate ang Suporta sa Maraming Wika  
+        Piliin ang nais na wika at matatanggap ang sagot sa napiling wika.
+        `,
+    uz: `Law Bot’dan foydalanish bo'yicha qo'llanma.
+
+        ▶Chatbotga kirish  
+        Veb-sayt yoki mobil ilova orqali kirish va oddiy ro'yxatdan o'tish kifoya.
+
+        ▶Savolni kiritish  
+        Qiziqtirgan mavzuni erkin yozing.  
+        Misol: "E-7 vizasini olish uchun qanday talablar mavjud?", "Ijara shartnomasini tuzishda nimaga e'tibor berish kerak?", "Ish beruvchi ish haqini to'lamasa nima qilish kerak?"
+
+        ▶Moslashtirilgan javoblarni olish  
+        Chatbot qisqa va foydali javoblar taqdim etadi, zarur bo'lsa tegishli idoralar havolasini ko'rsatadi.
+
+        ▶Ko'p tildagi yordamni yoqish  
+        Tanlangan tilni tanlang, va ushbu tilda javoblar taqdim etiladi.`,
+    th: `วิธีการใช้งาน Law Bot:
+
+        ▶เข้าสู่ระบบแชทบอท  
+        เข้าผ่านเว็บไซต์หรือแอปพลิเคชันบนมือถือ ลงทะเบียนง่ายๆ และสามารถเริ่มใช้งานได้ทันที
+
+        ▶ป้อนคำถาม  
+        พิมพ์คำถามที่ต้องการทราบได้อย่างอิสระ  
+        ตัวอย่าง: "ข้อกำหนดในการขอวีซ่า E-7 มีอะไรบ้าง?", "สิ่งที่ควรระวังในการทำสัญญาเช่าคืออะไร?", "ควรทำอย่างไรหากนายจ้างไม่จ่ายเงินเดือน?"
+
+        ▶รับคำตอบที่เหมาะสม  
+        แชทบอทจะให้คำตอบที่เข้าใจง่ายและใช้งานได้จริง และจะให้ลิงก์ของหน่วยงานที่เกี่ยวข้องหากจำเป็น
+
+        ▶เปิดใช้งานการสนับสนุนหลายภาษา  
+        เลือกภาษาที่ต้องการ และคำตอบจะได้รับในภาษานั้น`,
   },
 
   이민준비: {
     ko: `이민 준비를 위한 것들입니다.
-    1. 필요한 준비
-    1) 비자 준비
-    취업 비자: E-비자 시리즈 (E-2 영어 강사, E-7 전문직 등).
-    유학 비자: D-2(대학 및 대학원 과정), D-4(어학연수).
-    결혼 이민 비자: F-6.
-    사업 비자: D-8(투자 비자) 등.
-    비자 발급을 위해 초청장, 재정 증빙, 학력/경력 서류 등을 준비해야 함.
-    한국 대사관 또는 영사관에서 신청하며, 체류 목적에 따라 제출 서류가 다름.
-    2) 한국어 능력
-    TOPIK 시험(Test of Proficiency in Korean)을 준비하는 것이 유리, 일부 비자(예: D-2, E-7)는 TOPIK 성적이 요구되기도 함.
-    3) 거주지 확보
-    한국에서는 월세, 전세, 혹은 단기 렌트 옵션이 있음.
-    한국의 부동산 계약은 보증금 제도가 독특하므로 이를 이해하는 것이 중요 -> 부동산 법
-    4) 건강보험
-    한국 도착 후에는 **국민건강보험(National Health Insurance)**에 가입해야 함. 체류 자격에 따라 자동 가입되거나 신청이 필요.
-    5) 기타 서류 준비
-    출생증명서, 범죄경력증명서, 학력 증명서 등을 준비, 한국어 번역과 공증이 필요한 경우 다수.
+      1. 필요한 준비
+      1) 비자 준비
+      취업 비자: E-비자 시리즈 (E-2 영어 강사, E-7 전문직 등).
+      유학 비자: D-2(대학 및 대학원 과정), D-4(어학연수).
+      결혼 이민 비자: F-6.
+      사업 비자: D-8(투자 비자) 등.
+      비자 발급을 위해 초청장, 재정 증빙, 학력/경력 서류 등을 준비해야 함.
+      한국 대사관 또는 영사관에서 신청하며, 체류 목적에 따라 제출 서류가 다름.
+      2) 한국어 능력
+      TOPIK 시험(Test of Proficiency in Korean)을 준비하는 것이 유리, 일부 비자(예: D-2, E-7)는 TOPIK 성적이 요구되기도 함.
+      3) 거주지 확보
+      한국에서는 월세, 전세, 혹은 단기 렌트 옵션이 있음.
+      한국의 부동산 계약은 보증금 제도가 독특하므로 이를 이해하는 것이 중요 -> 부동산 법
+      4) 건강보험
+      한국 도착 후에는 **국민건강보험(National Health Insurance)**에 가입해야 함. 체류 자격에 따라 자동 가입되거나 신청이 필요.
+      5) 기타 서류 준비
+      출생증명서, 범죄경력증명서, 학력 증명서 등을 준비, 한국어 번역과 공증이 필요한 경우 다수.
 
-    2. 주요 이민 정책
-    1) 체류 자격
-    체류 외국인은 **외국인등록증(Alien Registration Card)**을 발급받아야 함. 90일 이상 체류하는 경우 필수입니다.
-    체류 자격에 따라 취업, 학업, 가족 초청 등이 가능.
-    2) F-6 결혼 이민 비자
-    한국 국민과 결혼한 외국인에게 발급.
-    초기에는 1년 유효기간의 비자를 받고, 갱신을 통해 장기 체류가 가능.
-    한국어 능력, 재정 안정성, 결혼 진정성 심사 있음.
-    3) 귀화 및 영주권
-    영주권(F-5): 일정 기간 동안 합법적으로 체류하고 재정 능력과 한국어 능력을 입증하면 신청 가능.
-    귀화: 일반귀화, 간이귀화, 특별귀화로 나뉘며, 한국 역사와 언어 시험(TOPIK)이 필요.
-    4) 고용허가제(EPS)
-    비숙련 외국인 근로자를 위한 정책으로, 제조업, 건설업 등 일부 산업에서 일할 수 있는 비자(E-9).
-    고용주는 외국인 근로자를 고용하기 위해 정부 허가를 받아야 함.
-    
-    3. 문화적 적응
-    한국은 예의를 중시하는 사회이며, 언어와 문화적 차이를 이해하는 것이 중요(나이에 따른 호칭 사용, 식사 문화, 사회적 규범 등)
-    
-    4. 도움 받을 수 있는 기관
-    대한민국 출입국·외국인정책본부: 비자 및 체류 관련 정보를 제공.
-    외국인 지원센터: 각 지역에 있으며, 한국 생활 적응을 돕는 프로그램과 법률 상담 등을 지원.`,
+      2. 주요 이민 정책
+      1) 체류 자격
+      체류 외국인은 **외국인등록증(Alien Registration Card)**을 발급받아야 함. 90일 이상 체류하는 경우 필수입니다.
+      체류 자격에 따라 취업, 학업, 가족 초청 등이 가능.
+      2) F-6 결혼 이민 비자
+      한국 국민과 결혼한 외국인에게 발급.
+      초기에는 1년 유효기간의 비자를 받고, 갱신을 통해 장기 체류가 가능.
+      한국어 능력, 재정 안정성, 결혼 진정성 심사 있음.
+      3) 귀화 및 영주권
+      영주권(F-5): 일정 기간 동안 합법적으로 체류하고 재정 능력과 한국어 능력을 입증하면 신청 가능.
+      귀화: 일반귀화, 간이귀화, 특별귀화로 나뉘며, 한국 역사와 언어 시험(TOPIK)이 필요.
+      4) 고용허가제(EPS)
+      비숙련 외국인 근로자를 위한 정책으로, 제조업, 건설업 등 일부 산업에서 일할 수 있는 비자(E-9).
+      고용주는 외국인 근로자를 고용하기 위해 정부 허가를 받아야 함.
+      
+      3. 문화적 적응
+      한국은 예의를 중시하는 사회이며, 언어와 문화적 차이를 이해하는 것이 중요(나이에 따른 호칭 사용, 식사 문화, 사회적 규범 등)
+      
+      4. 도움 받을 수 있는 기관
+      대한민국 출입국·외국인정책본부: 비자 및 체류 관련 정보를 제공.
+      외국인 지원센터: 각 지역에 있으며, 한국 생활 적응을 돕는 프로그램과 법률 상담 등을 지원.`,
 
     en: `Preparation for Immigration to South Korea
-    1. Necessary Preparations
-    Visa Preparation
-    Work Visa: E-series visas (e.g., E-2 for English teachers, E-7 for professionals).
-    Student Visa: D-2 (university courses), D-4 (language training).
-    Marriage Visa: F-6.
-    Business Visa: D-8 (investment visa), etc.
-    To apply for a visa, you need documents such as an invitation letter, financial proof, and academic/work records.
-    Applications are made through a Korean embassy or consulate, with required documents differing based on the purpose of stay.
-    Korean Language Proficiency
-    Taking the TOPIK test (Test of Proficiency in Korean) is advantageous. Some visas (e.g., D-2, E-7) may require TOPIK scores.
-    Securing Housing
-    In Korea, options include jeonse (large deposit rental), wolse (monthly rental), and short-term leases.
-    Korean real estate contracts are unique, so it’s essential to understand the system.
-    Health Insurance
-    After arriving in Korea, you must register for National Health Insurance. Depending on your residency status, you may be automatically enrolled or need to apply.
-    Other Documents
-    Prepare birth certificates, criminal background checks, and academic qualifications. Some documents may need to be translated into Korean and notarized.
+      1. Necessary Preparations
+      Visa Preparation
+      Work Visa: E-series visas (e.g., E-2 for English teachers, E-7 for professionals).
+      Student Visa: D-2 (university courses), D-4 (language training).
+      Marriage Visa: F-6.
+      Business Visa: D-8 (investment visa), etc.
+      To apply for a visa, you need documents such as an invitation letter, financial proof, and academic/work records.
+      Applications are made through a Korean embassy or consulate, with required documents differing based on the purpose of stay.
+      Korean Language Proficiency
+      Taking the TOPIK test (Test of Proficiency in Korean) is advantageous. Some visas (e.g., D-2, E-7) may require TOPIK scores.
+      Securing Housing
+      In Korea, options include jeonse (large deposit rental), wolse (monthly rental), and short-term leases.
+      Korean real estate contracts are unique, so it’s essential to understand the system.
+      Health Insurance
+      After arriving in Korea, you must register for National Health Insurance. Depending on your residency status, you may be automatically enrolled or need to apply.
+      Other Documents
+      Prepare birth certificates, criminal background checks, and academic qualifications. Some documents may need to be translated into Korean and notarized.
 
-    2. Key Immigration Policies
-    Residency Status
-    Foreigners staying longer than 90 days must obtain an Alien Registration Card.
-    Depending on residency status, you may be eligible for work, study, or family reunification.
-    F-6 Marriage Visa
-    Issued to foreigners married to a Korean citizen.
-    Initially valid for 1 year, with the possibility of renewal for long-term residence.
-    Evaluations include Korean language ability, financial stability, and the authenticity of the marriage.
-    Naturalization and Permanent Residency
-    Permanent Residency (F-5): Available after a period of lawful residence, with proof of financial stability and Korean language ability.
-    Naturalization: General, simplified, and special naturalization options require passing Korean history and language exams (TOPIK).
-    Employment Permit System (EPS)
-    A system for low-skilled foreign workers, allowing work in industries like manufacturing and construction (E-9 visa).
-    Employers must obtain government approval to hire foreign workers.
-    
-    3. Cultural Adaptation
-    Korean society places a strong emphasis on respect. Understanding language and cultural differences (e.g., addressing by age, dining customs, social norms) is crucial.
-    
-    4. Support Organizations
-    Korean Immigration Service: Provides visa and residency information.
-    Foreigner Support Centers: Offer adaptation programs and legal consultation for living in Korea.`,
+      2. Key Immigration Policies
+      Residency Status
+      Foreigners staying longer than 90 days must obtain an Alien Registration Card.
+      Depending on residency status, you may be eligible for work, study, or family reunification.
+      F-6 Marriage Visa
+      Issued to foreigners married to a Korean citizen.
+      Initially valid for 1 year, with the possibility of renewal for long-term residence.
+      Evaluations include Korean language ability, financial stability, and the authenticity of the marriage.
+      Naturalization and Permanent Residency
+      Permanent Residency (F-5): Available after a period of lawful residence, with proof of financial stability and Korean language ability.
+      Naturalization: General, simplified, and special naturalization options require passing Korean history and language exams (TOPIK).
+      Employment Permit System (EPS)
+      A system for low-skilled foreign workers, allowing work in industries like manufacturing and construction (E-9 visa).
+      Employers must obtain government approval to hire foreign workers.
+      
+      3. Cultural Adaptation
+      Korean society places a strong emphasis on respect. Understanding language and cultural differences (e.g., addressing by age, dining customs, social norms) is crucial.
+      
+      4. Support Organizations
+      Korean Immigration Service: Provides visa and residency information.
+      Foreigner Support Centers: Offer adaptation programs and legal consultation for living in Korea.`,
 
     hi: `दक्षिण कोरिया में प्रवास की तैयारी
-    
-    1. आवश्यक तैयारियाँ
-    वीजा की तैयारी
-    र्क वीजा: ई-सीरीज़ वीजा (जैसे, E-2 अंग्रेज़ी शिक्षक के लिए, E-7 पेशेवरों के लिए)।
-    टूडेंट वीजा: D-2 (विश्वविद्यालय पाठ्यक्रम), D-4 (भाषा प्रशिक्षण)।
-    शादी का वीजा: F-6।
-    बिजनेस वीजा: D-8 (निवेश वीजा) और अन्य।
-    वीजा आवेदन के लिए निमंत्रण पत्र, वित्तीय प्रमाण, शैक्षिक/अनुभव प्रमाणपत्र तैयार करने होंगे।
-    वीजा आवेदन कोरियाई दूतावास या वाणिज्य दूतावास के माध्यम से किया जाता है। आवश्यक दस्तावेज़ आपके निवास के उद्देश्य के अनुसार भिन्न होते हैं।
-    कोरियाई भाषा दक्षता
-    TOPIK परीक्षा (Test of Proficiency in Korean) देना फायदेमंद है। कुछ वीजा (जैसे, D-2, E-7) के लिए TOPIK स्कोर की आवश्यकता होती है।
-    आवास की व्यवस्था
-    कोरिया में, जियोन्से (बड़ी जमा राशि), वोल्से (मासिक किराया) और अल्पकालिक पट्टे के विकल्प उपलब्ध हैं।
-    कोरियाई संपत्ति पट्टा प्रणाली अनूठी है। इसे समझना आवश्यक है।
-    सवास्थ्य बीमा
-    कोरिया पहुँचने के बाद, राष्ट्रीय स्वास्थ्य बीमा (National Health Insurance) में पंजीकरण कराना अनिवार्य है। आपके निवास की स्थिति के आधार पर यह स्वचालित रूप से होता है या आवेदन करना पड़ता है।
-    अन्य दस्तावेज़ों की तैयारी
-    जन्म प्रमाण पत्र, पुलिस रिकॉर्ड और शैक्षिक प्रमाण पत्र तैयार करें। कुछ दस्तावेज़ों का कोरियाई में अनुवाद और नोटरीकृत होना आवश्यक है।
-    
-    2. प्रमुख आव्रजन नीतियाँ
-    निवास स्थिति
-    90 दिनों से अधिक समय तक रहने वाले विदेशियों को एलियन रजिस्ट्रेशन कार्ड प्राप्त करना आवश्यक है।
-    निवास की स्थिति के आधार पर, काम, पढ़ाई या परिवार पुनर्मिलन की अनुमति हो सकती है।
-    शादी का वीजा (F-6)
-    कोरियाई नागरिक से शादी करने वाले विदेशियों को जारी किया जाता है।
-    परारंभ में 1 वर्ष के लिए वैध, दीर्घकालिक निवास के लिए नवीनीकरण संभव है।
-    कोरियाई भाषा कौशल, वित्तीय स्थिरता और विवाह की प्रामाणिकता की जाँच की जाती है।
-    नागरिकता और स्थायी निवास
-    सथायी निवास (F-5): एक निश्चित अवधि के लिए कानूनी रूप से रहने के बाद और वित्तीय स्थिरता तथा कोरियाई भाषा कौशल साबित करने पर उपलब्ध।
-    नागरिकता: सामान्य, सरलीकृत और विशेष रूप से विभाजित। इसमें कोरियाई इतिहास और भाषा परीक्षा (TOPIK) उत्तीर्ण करना आवश्यक है।
-    रोजगार परमिट प्रणाली (EPS)
-    अल्प-कुशल विदेशी श्रमिकों के लिए नीति, जो निर्माण और विनिर्माण जैसे उद्योगों में काम करने की अनुमति देती है (E-9 वीजा)।
-    नियोक्ता को विदेशी श्रमिकों को नियुक्त करने के लिए सरकार से अनुमति लेनी होती है।
-    
-    3. सांस्कृतिक अनुकूलन
-    कोरियाई समाज सम्मान पर जोर देता है। भाषा और सांस्कृतिक अंतर (जैसे, उम्र के अनुसार संबोधन, भोजन रीति-रिवाज, सामाजिक मानदंड) को समझना महत्वपूर्ण है।
-    
-    4. सहायता प्रदान करने वाले संगठन
-    कोरियाई आव्रजन सेवा: वीजा और निवास जानकारी प्रदान करती है।
-    विदेशी सहायता केंद्र: कोरियाई जीवन के लिए अनुकूलन कार्यक्रम और कानूनी परामर्श प्रदान करते हैं।`,
+      
+      1. आवश्यक तैयारियाँ
+      वीजा की तैयारी
+      र्क वीजा: ई-सीरीज़ वीजा (जैसे, E-2 अंग्रेज़ी शिक्षक के लिए, E-7 पेशेवरों के लिए)।
+      टूडेंट वीजा: D-2 (विश्वविद्यालय पाठ्यक्रम), D-4 (भाषा प्रशिक्षण)।
+      शादी का वीजा: F-6।
+      बिजनेस वीजा: D-8 (निवेश वीजा) और अन्य।
+      वीजा आवेदन के लिए निमंत्रण पत्र, वित्तीय प्रमाण, शैक्षिक/अनुभव प्रमाणपत्र तैयार करने होंगे।
+      वीजा आवेदन कोरियाई दूतावास या वाणिज्य दूतावास के माध्यम से किया जाता है। आवश्यक दस्तावेज़ आपके निवास के उद्देश्य के अनुसार भिन्न होते हैं।
+      कोरियाई भाषा दक्षता
+      TOPIK परीक्षा (Test of Proficiency in Korean) देना फायदेमंद है। कुछ वीजा (जैसे, D-2, E-7) के लिए TOPIK स्कोर की आवश्यकता होती है।
+      आवास की व्यवस्था
+      कोरिया में, जियोन्से (बड़ी जमा राशि), वोल्से (मासिक किराया) और अल्पकालिक पट्टे के विकल्प उपलब्ध हैं।
+      कोरियाई संपत्ति पट्टा प्रणाली अनूठी है। इसे समझना आवश्यक है।
+      सवास्थ्य बीमा
+      कोरिया पहुँचने के बाद, राष्ट्रीय स्वास्थ्य बीमा (National Health Insurance) में पंजीकरण कराना अनिवार्य है। आपके निवास की स्थिति के आधार पर यह स्वचालित रूप से होता है या आवेदन करना पड़ता है।
+      अन्य दस्तावेज़ों की तैयारी
+      जन्म प्रमाण पत्र, पुलिस रिकॉर्ड और शैक्षिक प्रमाण पत्र तैयार करें। कुछ दस्तावेज़ों का कोरियाई में अनुवाद और नोटरीकृत होना आवश्यक है।
+      
+      2. प्रमुख आव्रजन नीतियाँ
+      निवास स्थिति
+      90 दिनों से अधिक समय तक रहने वाले विदेशियों को एलियन रजिस्ट्रेशन कार्ड प्राप्त करना आवश्यक है।
+      निवास की स्थिति के आधार पर, काम, पढ़ाई या परिवार पुनर्मिलन की अनुमति हो सकती है।
+      शादी का वीजा (F-6)
+      कोरियाई नागरिक से शादी करने वाले विदेशियों को जारी किया जाता है।
+      परारंभ में 1 वर्ष के लिए वैध, दीर्घकालिक निवास के लिए नवीनीकरण संभव है।
+      कोरियाई भाषा कौशल, वित्तीय स्थिरता और विवाह की प्रामाणिकता की जाँच की जाती है।
+      नागरिकता और स्थायी निवास
+      सथायी निवास (F-5): एक निश्चित अवधि के लिए कानूनी रूप से रहने के बाद और वित्तीय स्थिरता तथा कोरियाई भाषा कौशल साबित करने पर उपलब्ध।
+      नागरिकता: सामान्य, सरलीकृत और विशेष रूप से विभाजित। इसमें कोरियाई इतिहास और भाषा परीक्षा (TOPIK) उत्तीर्ण करना आवश्यक है।
+      रोजगार परमिट प्रणाली (EPS)
+      अल्प-कुशल विदेशी श्रमिकों के लिए नीति, जो निर्माण और विनिर्माण जैसे उद्योगों में काम करने की अनुमति देती है (E-9 वीजा)।
+      नियोक्ता को विदेशी श्रमिकों को नियुक्त करने के लिए सरकार से अनुमति लेनी होती है।
+      
+      3. सांस्कृतिक अनुकूलन
+      कोरियाई समाज सम्मान पर जोर देता है। भाषा और सांस्कृतिक अंतर (जैसे, उम्र के अनुसार संबोधन, भोजन रीति-रिवाज, सामाजिक मानदंड) को समझना महत्वपूर्ण है।
+      
+      4. सहायता प्रदान करने वाले संगठन
+      कोरियाई आव्रजन सेवा: वीजा और निवास जानकारी प्रदान करती है।
+      विदेशी सहायता केंद्र: कोरियाई जीवन के लिए अनुकूलन कार्यक्रम और कानूनी परामर्श प्रदान करते हैं।`,
 
     vi: `Chuẩn bị nhập cư Hàn Quốc
-    1. Chuẩn bị cần thiết
-    Chuẩn bị visa
-    Visa lao động: Dòng visa E (ví dụ, E-2 dành cho giáo viên tiếng Anh, E-7 dành cho chuyên gia).
-    Visa du học: D-2 (học đại học), D-4 (học tiếng).
-    Visa kết hôn: F-6.
-    Visa kinh doanh: D-8 (visa đầu tư), v.v.
-    Để xin visa, cần chuẩn bị thư mời, giấy tờ chứng minh tài chính, bằng cấp hoặc giấy tờ kinh nghiệm làm việc.
-    Đơn xin cấp visa nộp tại đại sứ quán hoặc lãnh sự quán Hàn Quốc, hồ sơ yêu cầu sẽ khác nhau tùy theo mục đích lưu trú.
-    Năng lực tiếng Hàn
-    Nên thi TOPIK (Test of Proficiency in Korean). Một số loại visa (như D-2, E-7) yêu cầu có điểm TOPIK.
-    Tìm kiếm nơi ở
-    Ở Hàn Quốc có các loại thuê nhà như jeonse (đặt cọc lớn), wolse (trả tiền hàng tháng) hoặc thuê ngắn hạn.
-    Hệ thống thuê nhà ở Hàn Quốc khá đặc biệt, cần tìm hiểu kỹ.
-    Bảo hiểm y tế
-    Sau khi đến Hàn Quốc, cần đăng ký Bảo hiểm Y tế Quốc gia (National Health Insurance). Tùy thuộc vào tư cách cư trú, bảo hiểm sẽ tự động đăng ký hoặc cần nộp hồ sơ.
-    Chuẩn bị giấy tờ khác
-    Chuẩn bị giấy khai sinh, lý lịch tư pháp, bằng cấp. Một số giấy tờ cần được dịch sang tiếng Hàn và công chứng.
-    
-    2. Chính sách nhập cư chính
-    Tư cách lưu trú
-    Người nước ngoài lưu trú trên 90 ngày phải xin cấp Thẻ đăng ký người nước ngoài (Alien Registration Card).
-    Tùy thuộc vào tư cách lưu trú, có thể làm việc, học tập hoặc đoàn tụ gia đình.
-    Visa kết hôn F-6
-    Cấp cho người nước ngoài kết hôn với công dân Hàn Quốc.
-    Thời hạn ban đầu 1 năm, có thể gia hạn để ở lâu dài.
-    Kiểm tra khả năng tiếng Hàn, khả năng tài chính và tính xác thực của hôn nhân.
-    Nhập tịch và cư trú vĩnh viễn
-    Cư trú vĩnh viễn (F-5): Có thể xin sau thời gian lưu trú hợp pháp, chứng minh tài chính và khả năng tiếng Hàn.
-    Nhập tịch: Có ba dạng: nhập tịch thông thường, đơn giản hóa và đặc biệt. Yêu cầu vượt qua kỳ thi lịch sử và ngôn ngữ Hàn Quốc (TOPIK).
-    Hệ thống cấp phép lao động (EPS)
-    Chính sách dành cho lao động nước ngoài không có tay nghề, làm việc trong ngành sản xuất, xây dựng (visa E-9).
-    Chủ lao động phải được chính phủ cấp phép để tuyển dụng lao động nước ngoài.
-    
-    3. Thích nghi văn hóa
-    Xã hội Hàn Quốc rất coi trọng lễ nghi. Cần hiểu sự khác biệt về ngôn ngữ và văn hóa (như cách xưng hô theo tuổi tác, văn hóa ăn uống, quy tắc xã hội).
-    
-    4. Tổ chức hỗ trợ
-    Cục Xuất nhập cảnh Hàn Quốc: Cung cấp thông tin về visa và cư trú.
-    Trung tâm hỗ trợ người nước ngoài: Cung cấp chương trình thích nghi với cuộc sống tại Hàn và tư vấn pháp lý.`,
+      1. Chuẩn bị cần thiết
+      Chuẩn bị visa
+      Visa lao động: Dòng visa E (ví dụ, E-2 dành cho giáo viên tiếng Anh, E-7 dành cho chuyên gia).
+      Visa du học: D-2 (học đại học), D-4 (học tiếng).
+      Visa kết hôn: F-6.
+      Visa kinh doanh: D-8 (visa đầu tư), v.v.
+      Để xin visa, cần chuẩn bị thư mời, giấy tờ chứng minh tài chính, bằng cấp hoặc giấy tờ kinh nghiệm làm việc.
+      Đơn xin cấp visa nộp tại đại sứ quán hoặc lãnh sự quán Hàn Quốc, hồ sơ yêu cầu sẽ khác nhau tùy theo mục đích lưu trú.
+      Năng lực tiếng Hàn
+      Nên thi TOPIK (Test of Proficiency in Korean). Một số loại visa (như D-2, E-7) yêu cầu có điểm TOPIK.
+      Tìm kiếm nơi ở
+      Ở Hàn Quốc có các loại thuê nhà như jeonse (đặt cọc lớn), wolse (trả tiền hàng tháng) hoặc thuê ngắn hạn.
+      Hệ thống thuê nhà ở Hàn Quốc khá đặc biệt, cần tìm hiểu kỹ.
+      Bảo hiểm y tế
+      Sau khi đến Hàn Quốc, cần đăng ký Bảo hiểm Y tế Quốc gia (National Health Insurance). Tùy thuộc vào tư cách cư trú, bảo hiểm sẽ tự động đăng ký hoặc cần nộp hồ sơ.
+      Chuẩn bị giấy tờ khác
+      Chuẩn bị giấy khai sinh, lý lịch tư pháp, bằng cấp. Một số giấy tờ cần được dịch sang tiếng Hàn và công chứng.
+      
+      2. Chính sách nhập cư chính
+      Tư cách lưu trú
+      Người nước ngoài lưu trú trên 90 ngày phải xin cấp Thẻ đăng ký người nước ngoài (Alien Registration Card).
+      Tùy thuộc vào tư cách lưu trú, có thể làm việc, học tập hoặc đoàn tụ gia đình.
+      Visa kết hôn F-6
+      Cấp cho người nước ngoài kết hôn với công dân Hàn Quốc.
+      Thời hạn ban đầu 1 năm, có thể gia hạn để ở lâu dài.
+      Kiểm tra khả năng tiếng Hàn, khả năng tài chính và tính xác thực của hôn nhân.
+      Nhập tịch và cư trú vĩnh viễn
+      Cư trú vĩnh viễn (F-5): Có thể xin sau thời gian lưu trú hợp pháp, chứng minh tài chính và khả năng tiếng Hàn.
+      Nhập tịch: Có ba dạng: nhập tịch thông thường, đơn giản hóa và đặc biệt. Yêu cầu vượt qua kỳ thi lịch sử và ngôn ngữ Hàn Quốc (TOPIK).
+      Hệ thống cấp phép lao động (EPS)
+      Chính sách dành cho lao động nước ngoài không có tay nghề, làm việc trong ngành sản xuất, xây dựng (visa E-9).
+      Chủ lao động phải được chính phủ cấp phép để tuyển dụng lao động nước ngoài.
+      
+      3. Thích nghi văn hóa
+      Xã hội Hàn Quốc rất coi trọng lễ nghi. Cần hiểu sự khác biệt về ngôn ngữ và văn hóa (như cách xưng hô theo tuổi tác, văn hóa ăn uống, quy tắc xã hội).
+      
+      4. Tổ chức hỗ trợ
+      Cục Xuất nhập cảnh Hàn Quốc: Cung cấp thông tin về visa và cư trú.
+      Trung tâm hỗ trợ người nước ngoài: Cung cấp chương trình thích nghi với cuộc sống tại Hàn và tư vấn pháp lý.`,
 
     ru: `Подготовка к иммиграции в Южную Корею
-    1. Необходимые приготовления
-    Подготовка визы
-    Рабочие визы: Серия E (например, E-2 для преподавателей английского языка, E-7 для профессионалов).
-    Учебные визы: D-2 (для учебы в университетах), D-4 (для языковых курсов).
-    Виза для брака: F-6.
-    Бизнес-виза: D-8 (виза инвестора) и др.
-    Для получения визы необходимо подготовить приглашение, финансовые документы, документы об образовании/опыте работы.
-    Подача заявки осуществляется через корейское посольство или консульство, в зависимости от цели пребывания список необходимых документов может отличаться.
-    Уровень корейского языка
-    Рекомендуется сдать тест TOPIK (Test of Proficiency in Korean). Для некоторых виз (например, D-2, E-7) требуется сертификат TOPIK.
-    Поиск жилья
-    В Корее доступны аренда с крупным депозитом (전세), ежемесячная аренда (월세) или краткосрочная аренда.
-    Система аренды в Корее уникальна, рекомендуется изучить основы корейского законодательства об аренде.
-    Медицинское страхование
-    После прибытия в Корею необходимо зарегистрироваться в системе Национального медицинского страхования (National Health Insurance). Регистрация происходит автоматически или по заявлению, в зависимости от вашего статуса проживания.
-    Подготовка документов
-    Подготовьте свидетельство о рождении, справку о несудимости, дипломы и другие документы. В некоторых случаях требуется перевод на корейский язык с нотариальным заверением.
-    
-    2. Основные иммиграционные политики
-    Статус проживания
-    Иностранцы, проживающие в Корее более 90 дней, должны получить удостоверение иностранца (Alien Registration Card).
-    В зависимости от статуса проживания возможны работа, учеба или воссоединение с семьей.
-    Виза для брака F-6
-    Выдается иностранцам, вступившим в брак с гражданином Кореи.
-    Первоначально выдается на 1 год, с возможностью продления для долгосрочного проживания.
-    Проверяются знание корейского языка, финансовая стабильность и подлинность брака.
-    Гражданство и постоянное проживание
-    Постоянное проживание (F-5): Доступно после законного пребывания в течение определенного времени, при наличии финансовой стабильности и знания корейского языка.
-    Гражданство: Доступно через общую, упрощенную или специальную натурализацию. Требуется сдача экзамена по истории Кореи и корейскому языку (TOPIK).
-    Система разрешения на работу (EPS)
-    Политика для иностранных работников низкой квалификации, предоставляющая возможность работать в таких отраслях, как производство и строительство (виза E-9).
-    Работодатель должен получить разрешение от правительства для найма иностранных сотрудников.
-    
-    3. Культурная адаптация
-    Корейское общество акцентирует внимание на уважении. Понимание языковых и культурных различий (например, обращение по возрасту, обычаи во время еды и социальные нормы) имеет важное значение.
-    
-    4. Организации, предоставляющие помощь
-    Иммиграционная служба Республики Корея: Предоставляет информацию о визах и проживании.
-    Центры поддержки иностранцев: Помогают адаптироваться к жизни в Корее, предоставляют программы обучения и юридические консультации.`,
+      1. Необходимые приготовления
+      Подготовка визы
+      Рабочие визы: Серия E (например, E-2 для преподавателей английского языка, E-7 для профессионалов).
+      Учебные визы: D-2 (для учебы в университетах), D-4 (для языковых курсов).
+      Виза для брака: F-6.
+      Бизнес-виза: D-8 (виза инвестора) и др.
+      Для получения визы необходимо подготовить приглашение, финансовые документы, документы об образовании/опыте работы.
+      Подача заявки осуществляется через корейское посольство или консульство, в зависимости от цели пребывания список необходимых документов может отличаться.
+      Уровень корейского языка
+      Рекомендуется сдать тест TOPIK (Test of Proficiency in Korean). Для некоторых виз (например, D-2, E-7) требуется сертификат TOPIK.
+      Поиск жилья
+      В Корее доступны аренда с крупным депозитом (전세), ежемесячная аренда (월세) или краткосрочная аренда.
+      Система аренды в Корее уникальна, рекомендуется изучить основы корейского законодательства об аренде.
+      Медицинское страхование
+      После прибытия в Корею необходимо зарегистрироваться в системе Национального медицинского страхования (National Health Insurance). Регистрация происходит автоматически или по заявлению, в зависимости от вашего статуса проживания.
+      Подготовка документов
+      Подготовьте свидетельство о рождении, справку о несудимости, дипломы и другие документы. В некоторых случаях требуется перевод на корейский язык с нотариальным заверением.
+      
+      2. Основные иммиграционные политики
+      Статус проживания
+      Иностранцы, проживающие в Корее более 90 дней, должны получить удостоверение иностранца (Alien Registration Card).
+      В зависимости от статуса проживания возможны работа, учеба или воссоединение с семьей.
+      Виза для брака F-6
+      Выдается иностранцам, вступившим в брак с гражданином Кореи.
+      Первоначально выдается на 1 год, с возможностью продления для долгосрочного проживания.
+      Проверяются знание корейского языка, финансовая стабильность и подлинность брака.
+      Гражданство и постоянное проживание
+      Постоянное проживание (F-5): Доступно после законного пребывания в течение определенного времени, при наличии финансовой стабильности и знания корейского языка.
+      Гражданство: Доступно через общую, упрощенную или специальную натурализацию. Требуется сдача экзамена по истории Кореи и корейскому языку (TOPIK).
+      Система разрешения на работу (EPS)
+      Политика для иностранных работников низкой квалификации, предоставляющая возможность работать в таких отраслях, как производство и строительство (виза E-9).
+      Работодатель должен получить разрешение от правительства для найма иностранных сотрудников.
+      
+      3. Культурная адаптация
+      Корейское общество акцентирует внимание на уважении. Понимание языковых и культурных различий (например, обращение по возрасту, обычаи во время еды и социальные нормы) имеет важное значение.
+      
+      4. Организации, предоставляющие помощь
+      Иммиграционная служба Республики Корея: Предоставляет информацию о визах и проживании.
+      Центры поддержки иностранцев: Помогают адаптироваться к жизни в Корее, предоставляют программы обучения и юридические консультации.`,
 
     zh: `移民韩国的准备事项
-    
-    1. 必要准备
-    签证准备
-    工作签证: E签证系列 (如E-2英语教师, E-7专业人士等)。
-    学生签证: D-2(大学及研究生课程), D-4(语言学习)。
-    结婚移民签证: F-6。
-    商务签证: D-8(投资签证)等。
-    申请签证需准备邀请函、财务证明、学历/工作经历文件等材料。
-    签证需通过韩国大使馆或领事馆申请，具体提交材料根据居留目的不同而有所差异。
-    韩语能力
-    建议参加TOPIK考试(Test of Proficiency in Korean)。部分签证(如D-2, E-7)可能需要TOPIK成绩。
-    居住安排
-    韩国的租房方式有押金制(전세)、月租制(월세)以及短期租赁。
-    韩国的租赁制度独具特色，建议提前了解相关法律规定。
-    健康保险
-    抵达韩国后需加入国民健康保险(National Health Insurance)。根据居留身份，保险会自动加入或需个人申请。
-    其他材料准备
-    准备出生证明、无犯罪记录证明、学历证明等材料。部分文件可能需翻译成韩语并进行公证。
-    
-    2. 主要移民政策
-    居留资格
-    外国人居留超过90天需办理外国人登记证(Alien Registration Card)。
-    根据居留资格，可从事工作、学习或申请家庭团聚。
-    结婚移民签证F-6
-    颁发给与韩国公民结婚的外国人。
-    初次签发为1年有效，可通过续签长期居留。
-    审核内容包括韩语能力、经济能力及婚姻真实性。
-    归化及永久居留
-    永久居留(F-5): 在韩国合法居留一段时间并满足经济能力及韩语能力条件后可申请。
-    归化: 分为普通归化、简易归化及特别归化。需通过韩国历史及语言考试(TOPIK)。
-    雇佣许可制度(EPS)
-    针对低技能劳工的政策，可在制造业、建筑业等领域工作(E-9签证)。
-    雇主需获得政府许可后才能聘用外国劳工。
-    
-    3. 文化适应
-    韩国是一个非常注重礼仪的社会，了解语言及文化差异非常重要(如年龄称谓、用餐文化及社会规范)。
-    
-    4. 支援机构
-    韩国出入境与外国人政策本部: 提供签证及居留相关信息。
-    外国人支援中心: 提供韩国生活适应培训及法律咨询服务。`,
+      
+      1. 必要准备
+      签证准备
+      工作签证: E签证系列 (如E-2英语教师, E-7专业人士等)。
+      学生签证: D-2(大学及研究生课程), D-4(语言学习)。
+      结婚移民签证: F-6。
+      商务签证: D-8(投资签证)等。
+      申请签证需准备邀请函、财务证明、学历/工作经历文件等材料。
+      签证需通过韩国大使馆或领事馆申请，具体提交材料根据居留目的不同而有所差异。
+      韩语能力
+      建议参加TOPIK考试(Test of Proficiency in Korean)。部分签证(如D-2, E-7)可能需要TOPIK成绩。
+      居住安排
+      韩国的租房方式有押金制(전세)、月租制(월세)以及短期租赁。
+      韩国的租赁制度独具特色，建议提前了解相关法律规定。
+      健康保险
+      抵达韩国后需加入国民健康保险(National Health Insurance)。根据居留身份，保险会自动加入或需个人申请。
+      其他材料准备
+      准备出生证明、无犯罪记录证明、学历证明等材料。部分文件可能需翻译成韩语并进行公证。
+      
+      2. 主要移民政策
+      居留资格
+      外国人居留超过90天需办理外国人登记证(Alien Registration Card)。
+      根据居留资格，可从事工作、学习或申请家庭团聚。
+      结婚移民签证F-6
+      颁发给与韩国公民结婚的外国人。
+      初次签发为1年有效，可通过续签长期居留。
+      审核内容包括韩语能力、经济能力及婚姻真实性。
+      归化及永久居留
+      永久居留(F-5): 在韩国合法居留一段时间并满足经济能力及韩语能力条件后可申请。
+      归化: 分为普通归化、简易归化及特别归化。需通过韩国历史及语言考试(TOPIK)。
+      雇佣许可制度(EPS)
+      针对低技能劳工的政策，可在制造业、建筑业等领域工作(E-9签证)。
+      雇主需获得政府许可后才能聘用外国劳工。
+      
+      3. 文化适应
+      韩国是一个非常注重礼仪的社会，了解语言及文化差异非常重要(如年龄称谓、用餐文化及社会规范)。
+      
+      4. 支援机构
+      韩国出入境与外国人政策本部: 提供签证及居留相关信息。
+      外国人支援中心: 提供韩国生活适应培训及法律咨询服务。`,
+    ja: `韓国への入国準備をしています
+      1. 必要な準備です
+      ビザの準備です
+      就労ビザ: Eシリーズビザ（例えば、英語教師の場合はE-2、専門家の場合はE-7）です。
+      学生ビザ:D-2（大学コース）、D-4（語学研修）です。
+      結婚ビザ:F-6です。
+      ビジネスビザ:D-8（投資ビザ）などです。
+      ビザを申請するには、招待状、財務証明書、学歴/勤務記録などの書類が必要です。
+      申請は韓国大使館または領事館を通じて行われ、必要書類は滞在目的によって異なります。
+      韓国語能力です
+      TOPIK試験（韓国語能力試験）を受けるのが有利です。 一部のビザ（例えば、D-2、E-7）は、TOPIKのスコアを必要とする場合があります。
+      ハウジングを固定します
+      国内ではチョンセ(大規模保証金賃貸)、ウォルセ(月賃貸)、短期賃貸などが選択肢としてあります。
+      韓国の不動産契約は独特なので、制度を理解することが必須です。
+      健康保険です
+      韓国に到着した後、国民健康保険に加入しなければなりません。 在留資格によっては、自動的に登録されるか、申請が必要になる場合があります。
+      その他の文書です
+      出生証明書、犯罪経歴確認書、学歴証明書を作成します。 一部の文書は韓国語に翻訳して公証しなければならない場合があります。
+
+      2. 主な移民政策です
+      在留資格です
+      90日以上滞在する外国人は、外国人登録証を取得する必要があります。
+      在留資格によっては、仕事、勉強、または家族再統一の対象になる場合があります。
+      F-6結婚ビザです
+      韓国人と結婚した外国人に発行されます。
+      最初は1年間有効で、長期滞在のための更新の可能性があります。
+      評価には、韓国語能力、経済的安定性、結婚の真正性などが含まれます。
+      帰化と永住権です
+      永住権（F-5）:合法的な居住期間の後、財政的安定性と韓国語能力の証明が可能です。
+      帰化します: 一般的な帰化、簡体字帰化、特殊帰化の選択には、韓国の歴史と言語の試験（TOPIK）に合格する必要があります。
+      雇用許可制度（EPS）です
+      低技能外国人労働者のための制度で、製造業や建設業（E-9ビザ）などの産業で働くことができます。
+      雇用主は外国人労働者を雇用するために政府の承認を得る必要があります。
+
+      3. 文化的適応です
+      韓国社会は尊敬を強く強調しています。 言語と文化の違い（例えば、年齢、食事の習慣、社会規範）を理解することは重要です。
+
+      4. サポート組織です
+      韓国の入国管理局は以下の通りです: ビザと居住情報を提供します。
+      外国人支援センター:韓国で生活するための適応プログラムと法律相談を提供します。
+      `,
+    th: `การเตรียมความพร้อมสำหรับการอพยพไปเกาหลีใต้
+      1. การเตรียมการที่จำเป็น
+      การเตรียมวีซ่า
+      วีซ่าทำงาน: วีซ่า E-series (เช่น E-2 สำหรับครูสอนภาษาอังกฤษ E-7 สำหรับมืออาชีพ)
+      วีซ่านักเรียน : D-2 (หลักสูตรมหาวิทยาลัย), D-4 (ฝึกภาษา).
+      วีซ่าแต่งงาน F-6.
+      วีซ่าธุรกิจ: D-8 (วีซ่าการลงทุน) เป็นต้น
+      ในการยื่นขอวีซ่า คุณต้องมีเอกสาร เช่น จดหมายเชิญ หลักฐานทางการเงิน และบันทึกการศึกษา/การทำงาน
+      การสมัครทำผ่านสถานทูตหรือสถานกงสุลเกาหลี โดยมีเอกสารที่จำเป็นแตกต่างกันไปตามวัตถุประสงค์ของการเข้าพัก
+      ความสามารถด้านภาษาเกาหลี
+      การทำข้อสอบ TOPIK (การทดสอบความชำนาญในภาษาเกาหลี) เป็นประโยชน์ วีซ่าบางรายการ (เช่น D-2, E-7) อาจต้องใช้คะแนน TOPIK
+      การรักษาความปลอดภัยในที่อยู่อาศัย
+      ในเกาหลี ตัวเลือกรวมถึง jeonse (เช่าเงินฝากขนาดใหญ่) หมาป่า (เช่ารายเดือน) และสัญญาเช่าระยะสั้น
+      สัญญาอสังหาริมทรัพย์ของเกาหลีเป็นสัญญาที่ไม่เหมือนใคร ดังนั้นจึงเป็นสิ่งจำเป็นที่จะต้องเข้าใจระบบ
+      ประกันสุขภาพ
+      หลังจากมาถึงเกาหลี คุณต้องลงทะเบียนประกันสุขภาพแห่งชาติ ขึ้นอยู่กับสถานะที่อยู่อาศัยของคุณ คุณอาจสมัครโดยอัตโนมัติหรือจำเป็นต้องสมัคร
+      เอกสารอื่น ๆ
+      เตรียมสูติบัตร ตรวจสอบประวัติอาชญากรรม และคุณสมบัติทางวิชาการ เอกสารบางฉบับอาจต้องแปลเป็นภาษาเกาหลีและได้รับการรับรอง
+
+      2. นโยบายการเข้าเมืองที่สำคัญ
+      สถานภาพผู้อยู่อาศัย.
+      ชาวต่างชาติที่อยู่นานกว่า 90 วันต้องได้รับบัตรลงทะเบียนคนต่างด้าว
+      คุณอาจมีสิทธิ์ทำงาน เรียน หรือรวมครอบครัวได้ ขึ้นอยู่กับสถานะที่อยู่อาศัย
+      วีซ่าแต่งงานเอฟ-6
+      ออกให้ชาวต่างชาติแต่งงานกับพลเมืองเกาหลี
+      อายุการใช้งานเริ่มต้น 1 ปี มีความเป็นไปได้ในการต่ออายุที่อยู่อาศัยระยะยาว
+      การประเมินรวมถึงความสามารถด้านภาษาเกาหลี ความมั่นคงทางการเงินและความถูกต้องของการแต่งงาน
+      การทำให้สัญชาติและถิ่นที่อยู่ถาวร.
+      ที่อยู่อาศัยถาวร (F-5): มีให้บริการหลังระยะเวลาการอยู่อาศัยที่ถูกต้องตามกฎหมาย พร้อมหลักฐานเสถียรภาพทางการเงินและความสามารถด้านภาษาเกาหลี
+      การทำให้เป็นธรรมชาติ: ตัวเลือกทั่วไป เรียบง่าย และการแปลงสัญชาติพิเศษจำเป็นต้องผ่านการสอบประวัติศาสตร์และภาษาเกาหลี (TOPIK)
+      ระบบใบอนุญาตการจ้างงาน (EPS)
+      ระบบสำหรับแรงงานต่างชาติฝีมือต่ำ อนุญาตให้ทำงานในอุตสาหกรรม เช่น การผลิตและการก่อสร้าง (วีซ่า E-9).
+      นายจ้างต้องได้รับการอนุมัติจากรัฐบาลในการจ้างแรงงานต่างชาติ
+
+      3. การปรับตัวทางวัฒนธรรม
+      สังคมเกาหลีให้ความสำคัญอย่างมากกับการเคารพ การเข้าใจภาษาและความแตกต่างทางวัฒนธรรม (เช่น การพูดถึงตามอายุ ธรรมเนียมการรับประทานอาหาร บรรทัดฐานทางสังคม) เป็นสิ่งสำคัญ
+
+      4. องค์กรสนับสนุน
+      บริการตรวจคนเข้าเมืองเกาหลี: ให้ข้อมูลวีซ่าและถิ่นที่อยู่
+      ศูนย์สนับสนุนชาวต่างชาติ: เสนอโปรแกรมการปรับตัวและการปรึกษาทางกฎหมายสำหรับการอาศัยอยู่ในเกาหลี`,
+    tl: `Paghahanda para sa Immigration sa South Korea
+      1. Mga Kinakailangang Paghahanda
+      Paghahanda ng Visa
+      Work Visa: Mga E-series na visa (hal., E-2 para sa English teacher, E-7 para sa mga propesyonal).
+      Student Visa: D-2 (mga kurso sa unibersidad), D-4 (pagsasanay sa wika).
+      Visa para sa Kasal: F-6.
+      Business Visa: D-8 (investment visa), atbp.
+      Upang mag-aplay para sa isang visa, kailangan mo ng mga dokumento tulad ng liham ng imbitasyon, patunay sa pananalapi, at mga talaan sa akademiko/trabaho.
+      Ang mga aplikasyon ay ginawa sa pamamagitan ng isang Korean embassy o consulate, na may mga kinakailangang dokumento na naiiba batay sa layunin ng pananatili.
+      Kahusayan sa Wikang Korean
+      Ang pagkuha ng TOPIK test (Test of Proficiency in Korean) ay kapaki-pakinabang. Ang ilang mga visa (hal., D-2, E-7) ay maaaring mangailangan ng mga marka ng TOPIK.
+      Pag-secure ng Pabahay
+      Sa Korea, ang mga opsyon ay kinabibilangan ng jeonse (malaking depositong rental), wolse (buwanang pagrenta), at panandaliang pag-upa.
+      Ang mga kontrata sa Korean real estate ay natatangi, kaya mahalagang maunawaan ang system.
+      Health Insurance
+      Pagdating sa Korea, dapat kang magparehistro para sa National Health Insurance. Depende sa iyong residency status, maaari kang awtomatikong ma-enroll o kailangan mong mag-apply.
+      Iba pang mga Dokumento
+      Maghanda ng mga sertipiko ng kapanganakan, pagsusuri sa background ng kriminal, at mga kwalipikasyong pang-akademiko. Ang ilang mga dokumento ay maaaring kailangang isalin sa Korean at ma-notaryo.
+
+      2. Mga Pangunahing Patakaran sa Imigrasyon
+      Katayuan ng Paninirahan
+      Ang mga dayuhang mananatili nang higit sa 90 araw ay dapat kumuha ng Alien Registration Card.
+      Depende sa katayuan ng paninirahan, maaari kang maging karapat-dapat para sa trabaho, pag-aaral, o muling pagsasama-sama ng pamilya.
+      F-6 Marriage Visa
+      Ibinibigay sa mga dayuhang kasal sa isang Korean citizen.
+      Sa simula ay may bisa para sa 1 taon, na may posibilidad ng pag-renew para sa pangmatagalang paninirahan.
+      Kasama sa mga pagsusuri ang kakayahan sa wikang Korean, katatagan ng pananalapi, at ang pagiging tunay ng kasal.
+      Naturalisasyon at Permanenteng Paninirahan
+      Permanent Residency (F-5): Magagamit pagkatapos ng isang panahon ng legal na paninirahan, na may patunay ng katatagan ng pananalapi at kakayahan sa wikang Korean.
+      Naturalisasyon: Pangkalahatan, pinasimple, at espesyal na mga opsyon sa naturalisasyon ay nangangailangan ng pagpasa sa mga pagsusulit sa kasaysayan at wika ng Korea (TOPIK).
+      Employment Permit System (EPS)
+      Isang sistema para sa mga dayuhang manggagawa na may mababang kasanayan, na nagpapahintulot sa trabaho sa mga industriya tulad ng pagmamanupaktura at konstruksiyon (E-9 visa).
+      Ang mga employer ay dapat kumuha ng pag-apruba ng gobyerno upang kumuha ng mga dayuhang manggagawa.
+
+      3. Cultural Adaptation
+      Ang lipunang Koreano ay nagbibigay ng matinding diin sa paggalang. Ang pag-unawa sa mga pagkakaiba sa wika at kultura (hal., pagtugon ayon sa edad, mga kaugalian sa pagkain, mga pamantayan sa lipunan) ay mahalaga.
+
+      4. Mga Organisasyon ng Suporta
+      Korean Immigration Service: Nagbibigay ng impormasyon sa visa at paninirahan.
+      Mga Foreigner Support Center: Nag-aalok ng mga adaptation program at legal na konsultasyon para sa paninirahan sa Korea.`,
+    uz: `Janubiy Koreyaga immigratsiyaga tayyorgarlik
+      1. Kerakli tayyorgarliklar
+      Viza tayyorlash
+      Ish vizasi: Elektron seriyali vizalar (masalan, ingliz tili o'qituvchilari uchun E-2, professionallar uchun E-7).
+      Talaba vizasi: D-2 (universitet kurslari), D-4 (til o'qitish).
+      Nikoh vizasi: F-6.
+      Biznes vizasi: D-8 (investitsiya vizasi) va boshqalar.
+      Viza olish uchun sizga taklifnoma, moliyaviy dalil va akademik/ish yozuvlari kabi hujjatlar kerak bo'ladi.
+      Arizalar Koreya elchixonasi yoki konsulligi orqali amalga oshiriladi, talab qilinadigan hujjatlar qolish maqsadiga qarab farqlanadi.
+      Koreys tilini bilish darajasi
+      TOPIK testini (Koreys tilini bilish testi) topshirish foydalidir. Ba'zi vizalar (masalan, D-2, E-7) TOPIK ballarini talab qilishi mumkin.
+      Uy-joyni ta'minlash
+      Koreyada variantlar orasida jeonse (katta depozit ijarasi), wolse (oylik ijara) va qisqa muddatli ijaralar mavjud.
+      Koreya ko'chmas mulk shartnomalari noyobdir, shuning uchun tizimni tushunish juda muhimdir.
+      Sog'liqni saqlash sug'urtasi
+      Koreyaga kelganingizdan so'ng, siz Milliy sog'liq sug'urtasida ro'yxatdan o'tishingiz kerak. Sizning rezidentlik maqomingizga qarab, siz avtomatik ravishda ro'yxatdan o'tishingiz yoki ariza topshirishingiz kerak bo'lishi mumkin.
+      Boshqa hujjatlar
+      Tug'ilganlik to'g'risidagi guvohnomalar, jinoiy tekshiruvlar va akademik malakalarni tayyorlang. Ba'zi hujjatlarni koreys tiliga tarjima qilish va notarial tasdiqlash kerak bo'lishi mumkin.
+
+      2. Immigratsiyaning asosiy siyosatlari
+      Rezidentlik maqomi
+      90 kundan ortiq bo'lgan chet elliklar chet elliklarni ro'yxatga olish kartasini olishlari kerak.
+      Yashash maqomiga qarab, siz ishlash, o'qish yoki oilangizni birlashtirish huquqiga ega bo'lishingiz mumkin.
+      F-6 nikoh vizasi
+      Koreya fuqarosi bilan turmush qurgan xorijliklarga beriladi.
+      Dastlab 1 yil davomida amal qiladi, uzoq muddatli yashash uchun uzaytirish imkoniyati bilan.
+      Baholarga koreys tilini bilish qobiliyati, moliyaviy barqarorlik va nikohning haqiqiyligi kiradi.
+      Naturalizatsiya va doimiy yashash
+      Doimiy rezidentlik (F-5): Qonuniy yashash muddatidan keyin, moliyaviy barqarorlikni tasdiqlovchi hujjat va koreys tilini bilishi mumkin.
+      Naturalizatsiya: Umumiy, soddalashtirilgan va maxsus fuqarolikka qabul qilish imkoniyatlari Koreya tarixi va tili imtihonlarini (TOPIK) topshirishni talab qiladi.
+      Ishga ruxsatnoma tizimi (EPS)
+      Ishlab chiqarish va qurilish kabi sohalarda ishlashga ruxsat beruvchi past malakali xorijiy ishchilar tizimi (E-9 vizasi).
+      Ish beruvchilar chet ellik ishchilarni yollash uchun hukumat ruxsatini olishlari kerak.
+
+      3. Madaniy moslashuv
+      Koreya jamiyati hurmatga katta e'tibor beradi. Til va madaniy farqlarni tushunish (masalan, yoshga qarab murojaat qilish, ovqatlanish odatlari, ijtimoiy normalar) juda muhimdir.
+
+      4. Yordamchi tashkilotlar
+      Koreya immigratsiya xizmati: viza va yashash ma'lumotlarini taqdim etadi.
+      Chet elliklarni qo'llab-quvvatlash markazlari: Koreyada yashash uchun moslashish dasturlari va huquqiy maslahatlarni taklif qiling.`,
   },
 
   임대차계약: {
@@ -657,6 +879,68 @@ const responses = {
       ■一般情况下，交付保证金的10%作为合同预付款，入住时补齐剩余金额。房客中途解除合同时，无法获还合同预付款，房东废除合同时，须向房客支付相当于预付款两倍 的违约金。
       ■原则上，合同到期后可全额收回保证金，但发生月租或公共费拖欠等特殊情况时，可扣除该部分金额后获还剩余保证金。
       ■中介手续费因居住类型、面积、交易金额而异。提供外国语服务的房地产(主要为英语、中文和日语)列表可登录由首尔市运营的首尔房地产信息广场(http://land.seoul.go.kr ) 进行查看。`,
+    ja: `賃貸契約に関する情報です。
+
+      1. チョンセ（保証金制度）  
+      ■チョンセとは、家主に一定額を保証金として預け、1～2年間の賃貸契約後に使用する制度です。契約時にチョンセ金額の10%を契約金として支払い、入居時に残額を支払います。  
+      ■入居者は賃貸期間中、入居当時の住宅状態を維持する必要があり、内部インテリア工事を行う場合は必ず家主の同意を得なければなりません。  
+      ■契約終了後、家主は入居者に保証金全額を返金する必要があります。  
+
+      2. 月額賃貸（ウォルセ）  
+      ■ウォルセとは、1～2年の賃貸契約後に一定額の保証金を支払い、毎月使用料（月額賃貸料）を支払う制度です。保証金は通常、月額賃貸料の10～20倍程度です。  
+      ■一般的に保証金の10%を契約金として支払い、入居時に残額を全額支払います。ただし、契約者が途中で契約を解除する場合、契約金は返金されません。一方、家主が契約を破棄した場合、契約金の2倍を契約者に支払う必要があります。  
+      ■保証金は契約終了後に全額返金されるのが原則ですが、月額賃貸料や公共料金が未払いなど特別な状況が発生した場合、その金額を差し引いて返金される場合があります。  
+      ■仲介手数料は住居形態、面積、取引金額によって異なります。  
+
+      外国語対応可能な不動産リスト（主に英語、中国語、日本語）は、ソウル市が運営する「ソウル不動産情報広場」(http://land.seoul.go.kr)で確認できます。
+      `,
+    th: `ข้อมูลเกี่ยวกับสัญญาเช่า:
+
+      1. ช็อนเซ (ระบบเงินมัดจำ)  
+      ■ ช็อนเซคือการฝากเงินจำนวนหนึ่งเป็นเงินมัดจำให้กับเจ้าของบ้าน เพื่อเช่าที่อยู่อาศัยในระยะเวลา 1-2 ปี โดยผู้เช่าจะจ่ายเงินมัดจำล่วงหน้า 10% ของจำนวนเงินทั้งหมดในวันทำสัญญา และชำระเงินที่เหลือในวันย้ายเข้า  
+      ■ ผู้เช่าต้องรักษาสภาพของบ้านให้อยู่ในสภาพเดิมตลอดระยะเวลาเช่า และหากต้องการปรับปรุงตกแต่งภายใน ต้องได้รับความยินยอมจากเจ้าของบ้าน  
+      ■ เมื่อสิ้นสุดสัญญา เจ้าของบ้านต้องคืนเงินมัดจำให้กับผู้เช่าเต็มจำนวน  
+
+      2. การเช่ารายเดือน (วอลเซ)  
+      ■ วอลเซคือการเช่าที่อยู่อาศัยในระยะเวลา 1-2 ปี โดยจ่ายเงินมัดจำจำนวนหนึ่งและชำระค่าเช่ารายเดือน เงินมัดจำมักมีมูลค่าเท่ากับ 10-20 เท่าของค่าเช่ารายเดือน  
+      ■ ปกติผู้เช่าจะจ่ายเงินมัดจำล่วงหน้า 10% ในวันทำสัญญา และชำระเงินส่วนที่เหลือในวันย้ายเข้า  
+      หากผู้เช่ายกเลิกสัญญาก่อนกำหนด จะไม่ได้รับเงินมัดจำคืน แต่ถ้าเจ้าของบ้านยกเลิกสัญญา ต้องจ่ายเงินมัดจำคืนสองเท่า  
+      ■ เงินมัดจำจะได้รับคืนเต็มจำนวนเมื่อสัญญาเช่าสิ้นสุด แต่หากมีการค้างชำระค่าเช่าหรือค่าสาธารณูปโภค เงินดังกล่าวจะถูกหักจากเงินมัดจำ  
+      ■ ค่าธรรมเนียมตัวกลางจะแตกต่างกันไปตามประเภทของที่อยู่อาศัย พื้นที่ และมูลค่าการเช่า  
+
+      สามารถตรวจสอบรายชื่อสำนักงานอสังหาริมทรัพย์ที่รองรับภาษาอื่น ๆ (เช่น อังกฤษ จีน ญี่ปุ่น) ได้ที่ Seoul Real Estate Information Plaza (http://land.seoul.go.kr)
+      `,
+    tl: `Impormasyon Tungkol sa Mga Kasunduan sa Pag-upa:
+
+      1. Jeonse (Sistema ng Deposito)  
+      ■ Ang Jeonse ay isang sistema kung saan nagbabayad ang nangungupahan ng paunang deposito sa may-ari ng bahay kapalit ng paggamit nito sa loob ng 1-2 taon. Sa panahon ng kontrata, 10% ng halaga ng Jeonse ang ibinabayad bilang paunang bayad, at ang natitirang balanse ay binabayaran sa araw ng paglipat.  
+      ■ Kailangang panatilihin ng nangungupahan ang kondisyon ng bahay sa orihinal nitong estado sa buong panahon ng pag-upa. Kung nais mag-ayos ng interior, kinakailangang humingi ng pahintulot mula sa may-ari.  
+      ■ Sa pagtatapos ng kontrata, kailangang ibalik ng may-ari ang buong deposito.  
+
+      2. Monthly Rent  
+      ■ Ang Monthly Rent ay isang sistema kung saan nagbabayad ang nangungupahan ng buwanang renta kapalit ng pananatili sa loob ng 1-2 taon. Karaniwan, ang deposito ay katumbas ng 10-20 beses ng buwanang renta.  
+      ■ Sa oras ng kontrata, 10% ng deposito ang binabayad bilang paunang bayad, at ang natitira ay binabayaran sa paglipat.  
+      Kung nais ng nangungupahan na kanselahin ang kontrata bago matapos, hindi maibabalik ang paunang bayad. Ngunit, kung ang may-ari ang kakansela, kailangang bayaran niya ng doble ang paunang bayad.  
+      ■ Ang deposito ay ibinabalik nang buo sa pagtatapos ng kontrata, ngunit maaaring bawasan kung may utang na buwanang renta o utility bills.  
+      ■ Ang bayad sa broker ay nagbabago batay sa uri ng bahay, sukat, at halaga ng transaksyon.  
+
+      Maaaring tingnan ang listahan ng mga ahensya ng real estate na sumusuporta sa ibang wika (Ingles, Tsino, Hapon) sa Seoul Real Estate Information Plaza (http://land.seoul.go.kr).
+      `,
+    uz: `Ijara shartnomasi haqida ma’lumot:
+
+      1. "Jeonse" (Kafolat puli tizimi)  
+      ■ "Jeonse" - bu uy egasiga ma'lum miqdorda kafolat puli sifatida to'lab, 1-2 yillik ijara shartnomasidan foydalanish tizimi. Shartnoma tuzishda jeonse miqdorining 10% kontrakt puli sifatida to'lanadi va ko'chib kirishda qolgan summa to'lanadi.  
+      ■ Ijara muddati davomida, ijarachi uy holatini o'sha davrdagi darajada saqlashi kerak va ichki ta'mirlash ishlari uchun uy egasining ruxsatini olishi shart.  
+      ■ Shartnoma muddati tugagandan so'ng, uy egasi ijarachiga kafolat pulining to'liq miqdorini qaytarishi kerak.  
+
+      2. Oyiga to'lanadigan ijara (Monthly Rent)  
+      ■ Bu tizimda 1-2 yillik ijara shartnomasi tuziladi va ma'lum miqdorda kafolat puli bilan birga har oy ijara haqi to'lanadi. Kafolat puli odatda oyiga to'lanadigan ijara haqining 10-20 barobarini tashkil qiladi.  
+      ■ Odatda kafolat puli miqdorining 10% kontrakt uchun to'lanadi, qolgan qismi esa ko'chib kirishda to'liq to'lanadi.  
+      Agar ijarachi shartnomani muddatidan avval bekor qilsa, kontrakt puli qaytarilmaydi. Uy egasi shartnomani buzgan holda esa kontrakt pulining ikki barobarini qaytarishi kerak.  
+      ■ Kafolat puli shartnoma tugagandan so'ng to'liq qaytariladi. Lekin ijara haqi yoki boshqa to'lovlar to'lanmagan bo'lsa, ushbu miqdor kafolat pulidan ushlab qolinadi.  
+      ■ Vositachilik to'lovi yashash turi, maydoni va kelishuv miqdoriga qarab farq qiladi.  
+
+      Chet tillarini biladigan rieltorlarning (asosan ingliz, xitoy va yapon tillarida) ro'yxatini Seul shahri boshqaradigan Seul ko'chmas mulk axborot maydonchasida (http://land.seoul.go.kr) ko'rishingiz mumkin.`,
   },
 
   "4대보험": {
@@ -894,6 +1178,62 @@ const responses = {
       -由公司处理：大多数情况下，雇主有义务为员工处理四大保险的加入。
       -自行加入：个体经营者或无收入者可自行申请加入国民年金及健康保险。
 `,
+    ja: `賃貸借契約に関する情報です。
+      1. チョンセ（保証金制度）
+      ■チョンセとは、家主に一定金額を保証金として預け、1～2年の賃貸借契約を結び使用する制度です。契約時にチョンセ金額の10%を契約金として支払い、入居時に残金を支払います。
+      ■入居者は賃貸期間中、入居時の住宅状態を維持する必要があり、内部インテリア工事を行う場合は必ず家主の同意を得なければなりません。
+      ■契約終了後、家主は入居者にチョンセ金全額を返還しなければなりません。
+
+      2. 月賃料制度（ウォルセ）
+      ■ウォルセとは、1～2年の賃貸借契約を結び、一定の保証金を支払い、毎月賃料（月賃料）を支払う制度です。保証金は通常、月賃料の10～20倍程度です。
+      ■通常、保証金の10%を契約金として支払い、入居時に残額を完納します。
+      ただし、契約者が途中で契約を解除する場合、契約金を返還されることはなく、家主が契約を破棄した場合、契約金の2倍を契約者に支払わなければなりません。
+      ■保証金は契約終了後、全額返還されることが原則ですが、月賃料や公共料金の未払い等の特別な状況が発生した場合、その金額分を差し引いて返還されることがあります。
+      ■仲介手数料は住宅の種類、面積、取引金額によって異なります。
+
+      外国語対応の不動産（主に英語、中国語、日本語）リストは、ソウル市が運営する「ソウル不動産情報広場」(http://land.seoul.go.kr) で確認できます。`,
+    th: `ข้อมูลเกี่ยวกับสัญญาเช่า
+    1. ชอนเซ (ระบบเงินประกัน)
+    ■ ชอนเซเป็นระบบที่ผู้เช่ามอบเงินจำนวนหนึ่งให้เจ้าของบ้านในรูปแบบเงินประกัน และทำสัญญาเช่าเป็นเวลา 1-2 ปี โดยชำระเงินมัดจำ 10% ของจำนวนเงินชอนเซในวันทำสัญญา และชำระเงินที่เหลือในวันย้ายเข้า
+    ■ ผู้เช่าต้องรักษาสภาพบ้านให้เหมือนเดิมในช่วงระยะเวลาเช่า และหากต้องการปรับปรุงตกแต่งภายใน จะต้องขออนุญาตจากเจ้าของบ้านก่อน
+    ■ หลังจากสัญญาเช่าสิ้นสุด เจ้าของบ้านต้องคืนเงินชอนเซทั้งหมดให้แก่ผู้เช่า
+    
+    2. ระบบค่าเช่ารายเดือน (วอลเซ)
+    ■ วอลเซเป็นระบบที่ทำสัญญาเช่า 1-2 ปี โดยชำระเงินประกันจำนวนหนึ่ง และชำระค่าเช่ารายเดือน ผู้เช่ามักจะต้องจ่ายเงินประกันเท่ากับ 10-20 เท่าของค่าเช่ารายเดือน
+    ■ โดยทั่วไป ผู้เช่าชำระเงินมัดจำ 10% ของเงินประกันในวันทำสัญญา และชำระส่วนที่เหลือในวันย้ายเข้า
+    หากผู้เช่ายกเลิกสัญญากลางคัน จะไม่ได้เงินมัดจำคืน แต่หากเจ้าของบ้านยกเลิกสัญญา จะต้องจ่ายเงินมัดจำเป็น 2 เท่าให้กับผู้เช่า
+    ■ เงินประกันจะคืนให้เต็มจำนวนเมื่อสัญญาสิ้นสุด ยกเว้นมีค่าเช่าหรือค่าสาธารณูปโภคค้างชำระ ซึ่งจะหักออกจากเงินประกัน
+    ■ ค่านายหน้าแตกต่างกันตามประเภทที่พัก ขนาดพื้นที่ และจำนวนเงินที่ทำสัญญา
+
+    รายชื่อบริษัทอสังหาริมทรัพย์ที่ให้บริการภาษาต่างประเทศ (เช่น อังกฤษ, จีน, ญี่ปุ่น) สามารถตรวจสอบได้ที่ "ศูนย์ข้อมูลอสังหาริมทรัพย์โซล" (http://land.seoul.go.kr) ซึ่งดำเนินการโดยกรุงโซล`,
+    tl: `Impormasyon tungkol sa kontrata sa pag-upa.
+    1. Jeonse (Sistema ng Deposito)
+    ■ Ang Jeonse ay isang sistema kung saan nagbabayad ang nangungupahan ng isang tiyak na halaga bilang deposito sa may-ari ng bahay para sa isang 1-2 taong kontrata sa pag-upa. Sa araw ng kontrata, 10% ng deposito ang ibinabayad at ang natitirang balanse ay binabayaran sa araw ng paglipat.
+    ■ Kailangang panatilihin ng nangungupahan ang orihinal na kondisyon ng bahay sa panahon ng pag-upa at kailangang humingi ng pahintulot ng may-ari kung nais magpagawa o magpa-interior.
+    ■ Sa pagtatapos ng kontrata, dapat ibalik ng may-ari ang buong deposito sa nangungupahan.
+    
+    2. Arawang Upa (Wolse)
+    ■ Ang Wolse ay isang sistema kung saan nagbabayad ang nangungupahan ng deposito at buwanang upa para sa 1-2 taong kontrata. Karaniwan, ang deposito ay 10-20 beses ng buwanang upa.
+    ■ Nagbabayad ng 10% ng deposito sa araw ng kontrata at ang natitirang balanse ay binabayaran sa paglipat.
+    Kung kakanselahin ng nangungupahan ang kontrata nang maaga, hindi maibabalik ang deposito. Kapag ang may-ari ang nagkansela, kailangang bayaran nito ng doble ang deposito.
+    ■ Ang deposito ay dapat ibalik nang buo sa pagtatapos ng kontrata, maliban kung may utang na buwanang upa o mga bayarin.
+    ■ Ang bayad sa ahensya ay nag-iiba depende sa uri, sukat, at halaga ng transaksyon.
+
+    Ang listahan ng mga ahensyang nagbibigay ng serbisyo sa mga wikang banyaga (Ingles, Tsino, Hapon) ay matatagpuan sa "Seoul Real Estate Information Plaza" (http://land.seoul.go.kr).`,
+    uz: `Ijara shartnomasi haqida ma'lumot.
+    1. Chonse (Kafolat puli tizimi)
+    ■ Chonse — uy egasiga muayyan miqdorda kafolat pulini topshirib, 1-2 yil davomida ijara shartnomasini tuzib, uy-joydan foydalanish tizimi. Shartnoma tuzilganda, chonse miqdorining 10%ini shartnoma puli sifatida to'lab, ko'chib kirishda qolgan qismini to'lash kerak.
+    ■ Ijara muddati davomida ijarachi uy-joyni dastlabki holatda saqlashi kerak va ichki ta'mir yoki dizayn ishlarini amalga oshirish uchun uy egasining roziligini olishi lozim.
+    ■ Shartnoma muddati tugagandan so'ng, uy egasi ijarachiga chonse pulining to'liq miqdorini qaytarishi kerak.
+    
+    2. Oylik ijara to'lovi (Wolse)
+    ■ Wolse — 1-2 yillik ijara shartnomasi bo'lib, ma'lum miqdorda kafolat puli to'lanadi va har oy ijara puli to'lanadi. Kafolat puli odatda oylik ijara to'lovining 10-20 barobari atrofida bo'ladi.
+    ■ Odatda kafolat pulining 10% ini shartnoma puli sifatida to'lab, ko'chib kirishda qolgan qismini to'lash kerak.
+    Agar shartnoma muddati tugamasdan bekor qilinsa, shartnoma puli qaytarilmaydi. Uy egasi shartnomani bekor qilsa, shartnoma pulining 2 barobarini to'lashi kerak.
+    ■ Kafolat puli shartnoma tugagandan so'ng to'liq qaytarilishi kerak, biroq oylik ijara yoki kommunal to'lovlar to'lanmagan holatda, to'lanmagan summa kafolat pulidan yechib olinadi.
+    ■ Rieltor haqi uy turiga, maydoniga va tranzaksiya miqdoriga qarab farq qiladi.
+
+    Chet tillarida xizmat ko'rsatadigan ko'chmas mulk agentlari (asosan ingliz, xitoy, yapon tili) ro'yxatini Seul shahri tomonidan boshqariladigan "Seul ko'chmas mulk ma'lumotlari portali" (http://land.seoul.go.kr) orqali ko'rishingiz mumkin.`,
   },
 
   노동법: {
@@ -1024,9 +1364,88 @@ const responses = {
       ■ 劳动时间未满一年的劳动者满勤一个月时，享有一天的带薪休假权利。
       ■ 因工作原因导致的伤病休息、产前产后休假、流产或死产休息情况认定为出勤。
       ■ 女性劳动者可申请每月一次的生理期休假(无薪)。`,
+    ja: `労働法に関する情報です。  
+      韓国に住む外国人労働者は、韓国人労働者と同様に労働法の保護を受けます。労働法に関する詳しい情報は雇用労働部（http://www.moel.go.kr [韓国語、英語]）で確認できます。  
+      1. 労働時間  
+      ■法定労働時間は休憩時間を除き1日8時間、1週間で合計40時間です。  
+      ■産後1年が経過していない女性は1日2時間、1週間6時間、1年150時間を超える延長勤務を行うことはできません。また、妊娠中の女性労働者は延長勤務をすることはできません。  
+      ■18歳以上の女性が深夜勤務（22時～翌6時）や休日勤務をする場合、労働者の同意が必要です。  
+      ■延長勤務、深夜勤務、休日勤務については、それぞれ通常賃金の50％を加算して支給します。  
+      ■4時間勤務時には30分、8時間勤務時には1時間の休憩時間が与えられます。  
+
+      2. 賃金  
+      ■2024年の最低賃金は9,860ウォン（時給）です。  
+      ■雇用主は労働者の賃金を小切手または現金で支払う必要があります。また、労働者が支給日前に賃金の前払いを請求する場合、既に労働した分の賃金を支払わなければなりません。  
+      ■未払い賃金は地方労働官庁に申告するか、民事手続きで解決することができます。  
+
+      3. 休暇  
+      ■1年以上継続勤務し、80％以上出勤した労働者には15日の有給休暇が与えられます。  
+      ■勤続年数が1年未満の労働者には、1か月皆勤で1日の有給休暇が与えられます。  
+      ■業務上の負傷や病気による休業、産前・産後休暇、流産・死産休暇で休んだ期間は出勤として認められます。  
+      ■女性労働者は月に1日、生理休暇（無給）を請求することができます。  `,
+    th: `ข้อมูลเกี่ยวกับกฎหมายแรงงาน  
+      แรงงานต่างชาติที่อาศัยอยู่ในเกาหลีมีสิทธิ์ได้รับการคุ้มครองตามกฎหมายแรงงานเช่นเดียวกับแรงงานเกาหลี สามารถหาข้อมูลเพิ่มเติมเกี่ยวกับกฎหมายแรงงานได้ที่กระทรวงการจ้างงานและแรงงาน (http://www.moel.go.kr [ภาษาเกาหลี, ภาษาอังกฤษ])  
+      1. ชั่วโมงการทำงาน  
+      ■ชั่วโมงการทำงานตามกฎหมายคือ 8 ชั่วโมงต่อวัน รวมทั้งสิ้น 40 ชั่วโมงต่อสัปดาห์โดยไม่รวมเวลาพัก  
+      ■หญิงที่คลอดบุตรไม่ถึง 1 ปีไม่สามารถทำงานล่วงเวลาเกิน 2 ชั่วโมงต่อวัน, 6 ชั่วโมงต่อสัปดาห์ หรือ 150 ชั่วโมงต่อปี และหญิงที่ตั้งครรภ์ห้ามทำงานล่วงเวลา  
+      ■การทำงานในเวลากลางคืน (22:00-06:00) หรือในวันหยุดต้องได้รับความยินยอมจากแรงงานหญิงที่มีอายุ 18 ปีขึ้นไป  
+      ■การทำงานล่วงเวลา การทำงานกลางคืน หรือการทำงานในวันหยุดจะได้รับค่าจ้างเพิ่ม 50% ของค่าจ้างปกติ  
+      ■มีเวลาพัก 30 นาทีเมื่อทำงาน 4 ชั่วโมง และ 1 ชั่วโมงเมื่อทำงาน 8 ชั่วโมง  
+
+      2. ค่าจ้าง  
+      ■ค่าจ้างขั้นต่ำในปี 2024 คือ 9,860 วอน (ต่อชั่วโมง)  
+      ■นายจ้างต้องจ่ายค่าจ้างเป็นเงินสดหรือเช็ค และในกรณีที่แรงงานขอรับค่าจ้างล่วงหน้า นายจ้างต้องจ่ายค่าจ้างสำหรับงานที่ทำแล้ว  
+      ■แรงงานสามารถร้องเรียนค่าจ้างที่ไม่ได้รับต่อสำนักงานแรงงานในท้องถิ่นหรือผ่านกระบวนการทางแพ่ง  
+
+      3. วันหยุด  
+      ■แรงงานที่ทำงานเกิน 1 ปีและมีการเข้าทำงานมากกว่า 80% จะได้รับวันหยุดที่ได้รับค่าจ้างจำนวน 15 วัน  
+      ■แรงงานที่ทำงานไม่ถึง 1 ปี จะได้รับวันหยุดที่ได้รับค่าจ้าง 1 วันสำหรับทุกๆ การทำงานครบ 1 เดือน  
+      ■การหยุดงานเนื่องจากบาดเจ็บหรือเจ็บป่วยจากงาน, การลาคลอดบุตร, การแท้งบุตร จะถือว่าเป็นการเข้าทำงาน  
+      ■แรงงานหญิงสามารถขอลาหยุดในกรณีมีประจำเดือนได้เดือนละ 1 วัน (ไม่มีค่าจ้าง)  
+      `,
+    tl: `Impormasyon tungkol sa Batas sa Paggawa  
+      Ang mga dayuhang manggagawa na naninirahan sa Korea ay protektado ng parehong mga batas sa paggawa tulad ng mga Koreano. Para sa karagdagang impormasyon tungkol sa batas sa paggawa, bisitahin ang Ministry of Employment and Labor (http://www.moel.go.kr [Koreano, Ingles]).  
+      1. Oras ng Paggawa  
+      ■Ang legal na oras ng paggawa ay 8 oras bawat araw, kabuuang 40 oras bawat linggo, hindi kasama ang oras ng pahinga.  
+      ■Ang mga babaeng hindi pa 1 taon mula nang manganak ay hindi maaaring mag-overtime ng higit sa 2 oras bawat araw, 6 na oras bawat linggo, o 150 oras bawat taon. Ang mga buntis na manggagawa ay hindi pinapayagang mag-overtime.  
+      ■Para sa mga babaeng may edad na 18 pataas, ang pagtatrabaho sa gabi (22:00-06:00) o sa araw ng pahinga ay kinakailangang may pahintulot ng manggagawa.  
+      ■Ang overtime, pagtatrabaho sa gabi, at pagtatrabaho sa araw ng pahinga ay binabayaran ng karagdagang 50% ng regular na sahod.  
+      ■Ang mga manggagawa ay binibigyan ng 30 minutong pahinga para sa 4 na oras ng paggawa at 1 oras para sa 8 oras ng paggawa.  
+
+      2. Sahod  
+      ■Ang minimum na sahod para sa 2024 ay 9,860 won (bawat oras).  
+      ■Ang employer ay kailangang magbayad ng sahod sa pamamagitan ng tseke o pera. Kung humiling ang manggagawa ng paunang bayad sa sahod bago ang itinakdang araw, kailangang bayaran ang mga oras na nagtrabaho na.  
+      ■Ang hindi natanggap na sahod ay maaaring isumbong sa lokal na tanggapan ng paggawa o dumaan sa proseso ng sibil.  
+
+      3. Bakasyon  
+      ■Ang mga manggagawang nagtrabaho ng higit sa 1 taon at may 80% na attendance ay binibigyan ng 15 araw na bayad na bakasyon.  
+      ■Ang mga manggagawang hindi pa nakakaabot ng 1 taong serbisyo ay binibigyan ng 1 araw na bayad na bakasyon para sa bawat buwan na tuloy-tuloy na pasok.  
+      ■Ang mga araw ng pahinga sanhi ng pinsala o sakit na kaugnay sa trabaho, maternity leave, at miscarriage leave ay itinuturing na attendance.  
+      ■Ang mga babaeng manggagawa ay maaaring humiling ng 1 araw na leave para sa menstrual period bawat buwan (walang bayad).  
+`,
+    uz: `Mehnat qonuni bo‘yicha ma’lumotlar.  
+      Koreyada yashaydigan chet el ishchilari koreys ishchilari bilan teng ravishda mehnat qonunlari himoyasidan foydalanadilar. Mehnat qonunlari haqida ko‘proq ma’lumotni Bandlik va mehnat vazirligining (http://www.moel.go.kr [Koreys, Ingliz]) saytida topishingiz mumkin.  
+      1. Ish vaqti  
+      ■Qonunchilikka ko‘ra, ish vaqti dam olish vaqtini hisobga olmagan holda kuniga 8 soat va haftasiga jami 40 soat.  
+      ■Tug‘ilganidan 1 yil o‘tmagan ayollar kuniga 2 soat, haftasiga 6 soatdan, yiliga esa 150 soatdan ortiq qo‘shimcha ish bajarishi mumkin emas. Homilador ayollar qo‘shimcha ish bajarishi taqiqlangan.  
+      ■18 yoshdan oshgan ayollar tunda ishlash (22:00-06:00) yoki dam olish kunlari ishlash uchun ishchining roziligi talab qilinadi.  
+      ■Qo‘shimcha ish, tunda ishlash va dam olish kunlari ishlash uchun ish haqining har biri uchun 50% ustama to‘lanadi.  
+      ■4 soatlik ish uchun 30 daqiqa, 8 soatlik ish uchun 1 soatlik dam olish vaqti beriladi.  
+
+      2. Ish haqi  
+      ■2024 yil uchun minimal ish haqi soatiga 9,860 vonni tashkil qiladi.  
+      ■Ish beruvchi ishchining ish haqini naqd yoki chek orqali to‘lashi shart. Ishchi ish haqining bir qismini to‘lashni oldindan so‘rasa, ish beruvchi allaqachon ishlangan soatlar uchun to‘lashga majbur.  
+      ■To‘lanmagan ish haqi mehnat bo‘limiga shikoyat qilish yoki fuqarolik tartibida hal qilish orqali qoplanishi mumkin.  
+
+      3. Ta’til  
+      ■1 yil davomida ishlagan va 80% dan ortiq qatnagan ishchilarga 15 kunlik haq to‘lanadigan ta’til beriladi.  
+      ■Ish tajribasi 1 yildan kam bo‘lgan ishchilarga 1 oy davomida doimiy qatnagan holda 1 kunlik haq to‘lanadigan ta’til beriladi.  
+      ■Ish jarayonida shikastlanish, tug‘ruq ta’tili yoki tushgan holatlarda dam olish muddati ishga kelgan deb hisoblanadi.  
+      ■Ayol ishchilarga oyiga 1
+      `,
   },
 };
-
+//---------------------------채팅--------------------/
 // 자동 응답 버튼 클릭 이벤트
 document.querySelectorAll(".quick-reply").forEach((button) => {
   button.addEventListener("click", () => {
@@ -1034,7 +1453,7 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
     const userMessage = button.textContent;
     const botReply = responses[topic][currentLanguage];
 
-    addMessage(userMessage, "user"); // 버튼 제목을 사용자 메시지로 추가
+    addMessage(userMessage, "user"); // 버튼 제목을 사용자 메시지로 추가=
     addMessage(botReply, "bot"); // 선택된 언어에 맞는 답변 추가
   });
 });
@@ -1042,11 +1461,11 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
 //과거 대화 AI 요약 및 저장 기능을 추가한..
 // 메시지 추가 함수
 function addMessage(message, sender) {
-  const chatbox = document.getElementById("chatbox");
   const messageElement = document.createElement("div");
   messageElement.classList.add("chat-message", sender);
   messageElement.textContent = message;
   chatbox.appendChild(messageElement);
+
   chatbox.scrollTop = chatbox.scrollHeight; // 최신 메시지로 스크롤 이동
 }
 
@@ -1058,55 +1477,150 @@ document.getElementById("userInput").addEventListener("keypress", function (e) {
   }
 });
 
-async function getBotResponse(userMessage) {
-  const url = 'http://128.134.103.140:8000/ask?question=' + encodeURIComponent(userMessage);
-
-  const response = await fetch(url, {
-    method: 'GET'
-  });
-
-  const data = await response.json();
-  return data.answer; // 응답 JSON 형식에 따라 변경
-}
-
 // 메시지 전송 함수
 function sendMessage() {
   const inputField = document.getElementById("userInput");
-  const userMessage = inputField.value.trim();
+  const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
-  if (userMessage === "") return;
-
-  // 사용자 메시지 추가
+  if (userMessage === "") return; // 빈 입력 방지
+  console.log("User Message:", userMessage);
+  // 사용자 메시지를 채팅에 추가
   addMessage(userMessage, "user");
 
-  // OpenAI API를 통한 응답 생성
+  // API를 통해 봇 응답 생성
   getBotResponse(userMessage).then((botMessage) => {
+    console.log("Bot Message:", botMessage);
+    // 봇의 메시지를 채팅에 추가
     addMessage(botMessage, "bot");
 
-    // 대화 히스토리에 저장
+    // 대화 기록 요약 및 저장 (선택적 기능)
     saveConversationAndSummarize(userMessage, botMessage);
   });
 
   inputField.value = ""; // 입력 필드 초기화
 }
-// 대화 저장 및 요약
-function saveConversationAndSummarize(userMessage, botMessage) {
-  const newConversation = {
-    date: new Date().toLocaleString("ko-KR", {
-      dateStyle: "short",
-      timeStyle: "short",
-    }),
-    userMessage: userMessage,
-    botMessage: botMessage,
-  };
 
-  conversationHistory.push(newConversation);
+// OpenAI API 호출 함수
+async function getBotResponse(userMessage) {
+  const url =
+    "http://128.134.103.140:8000/ask?question=" +
+    encodeURIComponent(userMessage);
 
-  // 로컬 스토리지에 저장
-  saveHistoryToLocalStorage();
+  console.log("request url", url);
+  try {
+    const response = await fetch(url, {
+      method: "GET", // POST를 사용하는 경우 JSON 데이터 설정 필요
+    });
+
+    console.log("response", response);
+    // 응답 데이터 파싱
+    const data = await response.json();
+
+    // API 응답에서 answer 또는 reply 값을 반환
+    return (
+      data.answer || data.reply || "죄송합니다, 응답을 생성할 수 없습니다."
+    );
+  } catch (error) {
+    console.error("Error fetching bot response:", error);
+    return "서버와 통신 중 문제가 발생했습니다.";
+  }
 }
 
-// 로컬 스토리지에 히스토리 저장
+// ------------예린님 압정 ! ---------------//
+/*--------------------------------------------과거 대화 part-------------------------------------------------------------------------------------*/
+// 과거 대화 모달 관련 DOM 요소
+const historyModal = document.getElementById("historyModal");
+const closeHistoryModal = document.getElementById("closeHistoryModal");
+const btnList = document.getElementById("btnlist");
+const historyList = document.getElementById("historyList");
+
+// 대화 히스토리 저장소 (예제 데이터)
+let conversationHistory = [
+  {
+    date: "2024-12-17",
+    summary: "AI 챗봇 사용법 설명",
+    keywords: ["챗봇", "사용법", "AI"],
+    details: "오늘은 AI 챗봇의 사용법과 주요 기능에 대해 논의했습니다.",
+  },
+  {
+    date: "2024-12-16",
+    summary: "프로젝트 일정 논의",
+    keywords: ["프로젝트", "일정", "계획"],
+    details: "프로젝트 일정과 팀의 작업 분담에 대해 논의했습니다.",
+  },
+];
+
+// 초기화: 로컬 스토리지에서 히스토리 불러오기
+document.addEventListener("DOMContentLoaded", () => {
+  const savedHistory = localStorage.getItem("conversationHistory");
+  if (savedHistory) {
+    conversationHistory = JSON.parse(savedHistory); // 저장된 히스토리 로드
+  }
+  historyModal.style.display = "none"; // 모달 숨김
+  console.log("페이지 로드 완료");
+});
+
+// 모달 열기
+btnList.addEventListener("click", () => {
+  renderHistory(); // 대화 목록 렌더링
+  historyModal.style.display = "block"; // 모달 표시
+});
+
+// 모달 닫기
+closeHistoryModal.addEventListener("click", () => {
+  historyModal.style.display = "none"; // 모달 숨김
+});
+
+// 대화 목록 렌더링 함수
+function renderHistory() {
+  if (!historyList) {
+    console.error("historyList 요소를 찾을 수 없습니다.");
+    return;
+  }
+
+  historyList.innerHTML = ""; // 기존 목록 초기화
+  conversationHistory.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.className = "history-item";
+    li.dataset.index = index; // 인덱스 저장
+
+    // 날짜 표시
+    const date = document.createElement("div");
+    date.className = "history-item-date";
+    date.textContent = item.date;
+
+    // 요약 표시
+    const summary = document.createElement("div");
+    summary.className = "history-item-summary";
+    summary.textContent = item.summary;
+
+    // 키워드 표시
+    const keywords = document.createElement("div");
+    keywords.className = "history-item-keywords";
+    keywords.textContent = `키워드: ${item.keywords.join(", ")}`;
+
+    // 항목 구성
+    li.appendChild(date);
+    li.appendChild(summary);
+    li.appendChild(keywords);
+
+    // 클릭 이벤트 추가 (세부 내용 보기)
+    li.addEventListener("click", () => {
+      showDetails(item);
+    });
+
+    historyList.appendChild(li);
+  });
+}
+
+// 대화 세부 내용 표시 함수
+function showDetails(item) {
+  alert(
+    `날짜: ${item.date}\n요약: ${item.summary}\n세부 내용: ${item.details}`
+  );
+}
+
+// 히스토리 업데이트 및 저장 함수
 function saveHistoryToLocalStorage() {
   localStorage.setItem(
     "conversationHistory",
@@ -1114,20 +1628,13 @@ function saveHistoryToLocalStorage() {
   );
 }
 
-// 로컬 스토리지에서 히스토리 불러오기
-function loadHistoryFromLocalStorage() {
-  const savedHistory = localStorage.getItem("conversationHistory");
-  if (savedHistory) {
-    conversationHistory.push(...JSON.parse(savedHistory));
-  }
+// 새로운 대화 추가 예제
+function addNewConversation(date, summary, keywords, details) {
+  const newConversation = { date, summary, keywords, details };
+  conversationHistory.push(newConversation); // 저장소에 추가
+  saveHistoryToLocalStorage(); // 로컬 스토리지에 저장
 }
-
-// 페이지 로드 시 히스토리 불러오기
-document.addEventListener("DOMContentLoaded", () => {
-  loadHistoryFromLocalStorage();
-});
-
-// 음성 인식
+// -------------------음성 인식-----------------//
 if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
   alert("이 브라우저는 음성 인식을 지원하지 않습니다.");
 }
@@ -1239,7 +1746,7 @@ function displaySavedMessages(savedMessages) {
   // LawBot 로고 추가
   const logoDiv = document.createElement("div");
   logoDiv.className = "logo";
-  logoDiv.textContent = "LawBot";
+  logoDiv.style.marginBottom = "30px";
   messagesContainer.appendChild(logoDiv);
   // 닫기 버튼 추가
   const closeButton = document.createElement("button");
