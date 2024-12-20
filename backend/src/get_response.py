@@ -6,13 +6,14 @@ from fastapi import FastAPI
 from typing import Optional
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+from api_key import search_endpoint, search_api_key, azure_openai_endpoint, azure_openai_api_key
 
 # Azure OpenAI 및 Azure Search 설정
-AZURE_OPENAI_ENDPOINT = ""
-AZURE_OPENAI_API_KEY = ""
+AZURE_OPENAI_ENDPOINT = azure_openai_endpoint
+AZURE_OPENAI_API_KEY = azure_openai_api_key
 DEPLOYMENT_NAME = 'gpt-4o'
-SEARCH_ENDPOINT = ""
-SEARCH_API_KEY = ""
+SEARCH_ENDPOINT = search_endpoint
+SEARCH_API_KEY = search_api_key
 SEARCH_INDEX_NAME = "immigrationlaw-index"
 SEMANTIC_CONFIGURATION = "immigrationlaw-semantic"
 
