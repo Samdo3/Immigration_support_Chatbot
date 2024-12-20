@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="word_style.css" />
+    <script src="word_script.js" defer></script>
+
+    <link
+      href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="main-container">
+      <!-- 과거 이력 확인 및 용어 정리 -->
+      <button id="btnmain" class="main-btn">💭</button>
+      <button id="btnword" class="word-btn">📖</button>
+      <button id="btnlist" class="list-btn">📌</button>
+      <!-- 챗봇 영역 -->
+      <div id="chatContainer" class="chat-container">
+        <!-- 로고 -->
+        <div class="logo"></div>
+        <div id="chatbox" class="chat-box"></div>
+        <!-- 입력 컨테이너 -->
+        <div class="input-container">
+          <!-- 사용자 입력창 및 전송 버튼 -->
+          <div class="input-row">
+            <!-- 언어 변경 및 음성 인식 버튼 -->
+            <div id="lang"><button id="lang-btn" class="lang">🌐</button></div>
+            <input
+              type="text"
+              class="input-box"
+              id="userInput"
+              onkeyup="checkEnter(event)"
+            />
+            <button id="voiceButton" class="voice">🎤</button>
+            <button class="send-btn" id="sendButton">전송</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 언어 선택 모달 -->
+      <div id="languageModal" class="modal">
+        <div class="modal-content">
+          <ul id="languageList">
+            <li data-lang="ko">한국어</li>
+            <li data-lang="en">English</li>
+            <!-- 영어-->
+            <li data-lang="ja">日本語</li>
+            <!-- 일본어 -->
+            <li data-lang="zh">中文</li>
+            <!-- 중국어-->
+            <li data-lang="th">ไทย</li>
+            <!-- 태국어 -->
+            <li data-lang="vi">Tiếng Việt</li>
+            <!-- 베트남어-->
+            <li data-lang="tl">Filipino</li>
+            <!-- 필리핀어 -->
+            <li data-lang="uz">O‘zbekcha</li>
+            <!-- 우즈벡어 -->
+            <li data-lang="ru">Русский</li>
+            <!-- 러시아어-->
+            <li data-lang="hi">हिन्दी</li>
+            <!-- 힌디어-->
+          </ul>
+          <button id="closeModal">닫기</button>
+        </div>
+      </div>
+
+      <!--압정 모달-->
+      <div id="historyModal" class="modal">
+        <div class="modal-contents">
+          <ul id="historylist"></ul>
+          <button id="closeHistoryModal">닫기</button>
+        </div>
+      </div>
+
+      <!-- 질문 답변 저장 -->
+      <div class="choice-container">
+        <button class="log-btn">✏️</button>
+      </div>
+    </div>
+  </body>
+</html>
