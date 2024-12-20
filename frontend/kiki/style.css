@@ -22,37 +22,47 @@ body {
   border-radius: 30px;
 }
 
-/* 초기 구성 사이드바
-.sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-} */
-/* ------------------------------------------------------------------*/
+.logo {
+  background-image: url("src/lawbot.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  border-radius: 1%;
+  margin-top: 20px;
+  margin-left: 25px;
+  margin-bottom: 30px;
+  width: 9vw;
+  height: 8vh;
+  position: relative;
+}
 
 .word-btn,
 .main-btn {
   /* font-family: "NanumSquareLight", sans-serif; */
+  background-color: #83d1ff; /* 활성화된 버튼 색상 */
   position: absolute;
-  background-color: #83d1ff;
   color: black;
   border: none;
   padding: 1.2vw 3vh;
-  font-size: 1.2em;
+  font-size: 1.5em;
   cursor: pointer;
 }
 /* 과거 이력 확인 및 용어 정리  */
 .main-btn {
-  top: 10%;
-  left: -4.5%;
+  top: 15%;
+  left: -3.5%;
+  border-radius: 10px 0 0 10px;
 }
 
 .word-btn {
-  top: 20%;
-  left: -4.5%;
+  top: 25%;
+  left: -3.5%;
+  border-radius: 10px 0 0 10px;
+}
+
+.active {
+  background-color: #bee7ff; /* 활성화된 버튼 색상 */
 }
 .list-btn {
   /* font-family: "NanumSquareLight", sans-serif; */
@@ -71,8 +81,8 @@ body {
   right: 9%;
 }
 
-/* 과거 대화 이력 목록 모달, 목록 창: 화면 왼쪽에서 열림----------------------------------------------------------------------------------------------------*/
-.history-modal {
+/* 압정 과거 대화 이력 목록 모달, 목록 창: 화면 왼쪽에서 열림----------------------------------------------------------------------------------------------------*/
+.historymodal {
   display: none;
   position: fixed;
   left: 0;
@@ -83,28 +93,27 @@ body {
   border-right: 1px solid #ddd;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
-  z-index: 1;
+  z-index: 9999;
   padding: 20px;
 }
 
 /* 모달 내용 */
-.modal-content {
+.modal-contents {
+  background-color: white;
   padding: 20px;
+  border-radius: 10px;
   text-align: left; /* 왼쪽 정렬 */
-}
-
-.modal-content h2 {
-  text-align: left; /* 왼쪽 정렬 */
-  margin-bottom: 20px;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 /* 닫기 버튼: 중앙 고정 */
-.close-modal-btn {
+.closeHistoryModal {
   position: absolute;
   top: 50%;
   right: -40px;
   transform: translateY(-50%);
-  background-color: #e74c3c;
+  background-color: #3498db;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -113,10 +122,11 @@ body {
   transition: background-color 0.3s;
 }
 
-.close-modal-btn:hover {
-  background-color: #c0392b;
+.closeHistoryModal:hover {
+  background-color: #2980b9;
 }
 
+/*대화 이력 리스트 스타일*/
 #historyList {
   list-style: none;
   padding: 0;
@@ -146,12 +156,6 @@ body {
 }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-/* 질문 답변 저장  */
-.log-btn {
-  top: 10%;
-  right: -3.2%;
-}
-/* ------------------------------------------------------------------*/
 /* 챗봇 영역 */
 .chat-container {
   background-image: url("src/page.jpg");
@@ -218,26 +222,28 @@ body {
 }
 
 /* ------------------------------------------------------------------*/
-/* Lawbot 로고 이미지로 바꿀까 고밍듕 ! */
-.logo {
-  padding: 3%;
-  font-size: 30px;
-}
 
-/* ------------------------------------------------------------------*/
-
-.input-container {
+.input-container,
+.word-input-container {
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
   position: fixed;
   background-color: rgba(131, 209, 255, 0.24);
   border-radius: 0 0 10px 10px;
   box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-  top: 72.4%;
+  padding: 4vh 3vw;
   left: 8.6%;
   width: 78.3%;
+}
+.input-container {
+  flex-direction: column; /* 세로 정렬 */
+  top: 72.4%;
   height: 13.5%;
-  padding: 4vh 3vw;
+}
+.word-input-container {
+  top: 81%;
+  height: 5%;
+  flex-direction: row;
+  gap: 1vw; /* 요소 간 간격 */
 }
 /* 자동 응답  */
 .quick-reply-buttons {
@@ -366,51 +372,6 @@ body {
   background-color: #2980b9; /* 닫기 버튼 호버 색상 */
 }
 
-/*
-#languageList {
-  display: none; }/* 초기 상태에서 숨김 */ /*
-/* 모달 배경 
-.modal {
-  display: none; /* 초기 상태는 숨김 
-  position: fixed;
-  z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-}
-
-/* 모달 내용 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 상단 여백과 중앙 정렬 
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* 모달 너비 
-  max-width: 300px; /* 최대 너비 설정 
-  text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* 닫기 버튼 스타일 
-#closeModal {
-  margin-top: 15px;
-  padding: 5px 10px;
-  background-color: #555;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#closeModal:hover {
-  background-color: #333;
-}
-  
-*/
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .input-box {
@@ -436,19 +397,25 @@ body {
   visibility: hidden;
 }
 /* 전송 버튼 */
-.send-btn {
+.send-btn,
+.send-btn-word {
   position: fixed;
   /* font-family: "NanumSquareLight", sans-serif; */
   background-color: #bee7ff;
   border: none;
   border-radius: 10vh;
-  height: 8vh;
-  width: 7%;
-  bottom: 8.5%;
-  margin-left: 72vw;
   cursor: pointer;
   font-size: 1.3em;
   padding: 0 1vw;
+  height: 8vh;
+  width: 7%;
+  bottom: 8.5%;
+}
+.send-btn {
+  margin-left: 72vw;
+}
+.send-btn-word {
+  margin-left: 75vw;
 }
 
 .send-btn:hover {
@@ -514,7 +481,7 @@ body {
 }
 .choice-container {
   position: relative; /* 원하는 위치로 이동 가능 */
-  top: 5%; /* 화면 상단 기준 위치 */
+  top: 3%; /* 화면 상단 기준 위치 */
   left: 97.7%; /* 화면 오른쪽 기준 위치 */
   display: flex;
   flex-direction: column; /* 버튼들을 세로로 정렬 */
@@ -528,6 +495,7 @@ body {
   background-color: #83d1ff;
   color: black;
   border: none;
+  border-radius: 0 10px 10px 0;
   padding: 1.2vw 3vh;
   font-size: 1.2em;
   cursor: pointer;
