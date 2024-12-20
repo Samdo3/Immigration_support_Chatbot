@@ -5,7 +5,7 @@ document.getElementById("btnword").addEventListener("click", () => {
 
 document.getElementById("btnmain").addEventListener("click", () => {
   // main.html 파일 열기
-  window.location.href = "main.html";
+  window.location.href = "index.html";
 });
 
 //----------------------언어 변경 -------------------------//
