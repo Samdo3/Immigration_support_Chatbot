@@ -1,0 +1,4 @@
+SEARCH_ENDPOINT = "https://ai-search-team3.search.windows.net"
+SEARCH_API_KEY = "SVteEFiHV62vyfZ56a6xsfba10kfSLoGseuenSigufAzSeCa4IB1"
+AZURE_OPENAI_ENDPOINT = 'https://openai-team3.openai.azure.com/'
+AZURE_OPENAI_API_KEY = '7u1gKFj9UhcAVQD1lLfCIrlXGVWm894NEljVILS0jG7z95cCwSkHJQQJ99ALACHYHv6XJ3w3AAABACOGKTgQ'

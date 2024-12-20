@@ -7,15 +7,14 @@ from typing import Optional
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
-
 # Azure OpenAI 및 Azure Search 설정
-AZURE_OPENAI_ENDPOINT = 'https://openai-team3.openai.azure.com/'
-AZURE_OPENAI_API_KEY = '7u1gKFj9UhcAVQD1lLfCIrlXGVWm894NEljVILS0jG7z95cCwSkHJQQJ99ALACHYHv6XJ3w3AAABACOGKTgQ'
+AZURE_OPENAI_ENDPOINT = ""
+AZURE_OPENAI_API_KEY = ""
 DEPLOYMENT_NAME = 'gpt-4o'
-SEARCH_ENDPOINT = "https://ai-search-team3.search.windows.net"
-SEARCH_API_KEY = "SVteEFiHV62vyfZ56a6xsfba10kfSLoGseuenSigufAzSeCa4IB1"
-SEARCH_INDEX_NAME = "keyword-index"
-SEMANTIC_CONFIGURATION = "keyword-semantic"
+SEARCH_ENDPOINT = ""
+SEARCH_API_KEY = ""
+SEARCH_INDEX_NAME = "immigrationlaw-index"
+SEMANTIC_CONFIGURATION = "immigrationlaw-semantic"
 
 # 언어 감지기 초기화
 detector = LanguageDetectorBuilder.from_all_languages().build()

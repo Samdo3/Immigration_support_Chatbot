@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app:
+    image: lawbot-app:latest
+    expose:
+      - "8000"
+    # FastAPI 등 앱 서버가 8000 포트에서 동작한다고 가정
+    # 'expose'는 내부 네트워크용, 외부 노출 없음
+    command: ["uvicorn", "src.get_response:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/acme-challenge:/var/www/html
+      - ./nginx/certs:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+    # 위에 certs 폴더는 이후 certbot을 통해 인증서가 위치할 폴더
