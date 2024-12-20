@@ -61,7 +61,6 @@
               type="text"
               class="input-box"
               id="userInput"
-              placeholder="질문을 입력해주세요 !"
               onkeyup="checkEnter(event)"
             />
             <button id="voiceButton" class="voice">🎤</button>
@@ -70,25 +69,6 @@
         </div>
       </div>
 
-      <!-- 용어 화면 영역 (wordScreen 추가) -->
-      <div id="wordScreen" class="chat-container" style="display: none">
-        <div class="logo"></div>
-        <div class="chat-box" id="chatContainer"></div>
-        <div class="word-input-container">
-          <div id="lang">
-            <button id="lang-btn" class="lang">🌐</button>
-          </div>
-          <input
-            type="text"
-            class="input-box"
-            id="userInputword"
-            placeholder="질문을 입력해주세요 !"
-            onkeyup="checkEnter(event)"
-          />
-          <button id="voiceButtonword" class="voice">🎤</button>
-        </div>
-        <button id="sendButtonword" class="send-btn-word">전송</button>
-      </div>
       <!-- 언어 선택 모달 -->
       <div id="languageModal" class="modal">
         <div class="modal-content">
