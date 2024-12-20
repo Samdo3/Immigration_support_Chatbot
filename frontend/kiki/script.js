@@ -1509,10 +1509,18 @@ async function getBotResponse(userMessage) {
   console.log("request url", url);
   try {
     const response = await fetch(url, {
-      method: "GET", // POST를 사용하는 경우 JSON 데이터 설정 필요
+      method: "GET"
+      // GET 요청일 경우 body나 Content-Type이 없어도 됩니다.
+      // headers: { "Content-Type": "application/json" } // 필요한 경우 추가
     });
 
     console.log("response", response);
+
+        // 응답이 정상적으로 왔는지 확인
+    if (!response.ok) {
+        console.error("Failed to fetch: ", response.status, response.statusText);
+        return "서버 응답에 문제가 발생했습니다.";
+    }
     // 응답 데이터 파싱
     const data = await response.json();
 
