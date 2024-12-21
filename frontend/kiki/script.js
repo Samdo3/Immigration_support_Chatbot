@@ -869,6 +869,19 @@ const closeHistoryModal = document.getElementById("closeHistoryModal");
 const btnList = document.getElementById("btnlist");
 const historyList = document.getElementById("historyList");
 
+function fetchConversationHistory() {
+  fetch(
+    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
+  ) // 여기에 실제 API URL을 입력하세요
+    .then((response) => response.json())
+    .then((data) => {
+      conversationHistory = data; // API 응답을 히스토리로 저장
+      saveHistoryToLocalStorage(); // 로컬 스토리지에도 저장
+      renderHistory(); // 히스토리 렌더링
+    })
+    .catch((error) => console.error("대화 히스토리 불러오기 실패:", error));
+}
+
 // 대화 히스토리 저장소 (예제 데이터)
 let conversationHistory = [
   {
