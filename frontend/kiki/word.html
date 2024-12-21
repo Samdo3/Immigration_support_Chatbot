@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="word_style.css" />
+    <script src="word_script.js" defer></script>
 
     <link
       href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
@@ -18,7 +18,6 @@
       <button id="btnmain" class="main-btn">💭</button>
       <button id="btnword" class="word-btn">📖</button>
       <button id="btnlist" class="list-btn">📌</button>
-
       <!-- 챗봇 영역 -->
       <div id="chatContainer" class="chat-container">
         <!-- 로고 -->
@@ -26,34 +25,6 @@
         <div id="chatbox" class="chat-box"></div>
         <!-- 입력 컨테이너 -->
         <div class="input-container">
-          <!-- 자동 응답 버튼 -->
-          <div class="quick-reply-buttons">
-            <button
-              class="quick-reply"
-              data-topic="사용방법"
-              id="btnGuide"
-              data-topic="저희 LawBot의 사용 방법을 안내해드릴게요."
-            >
-              사용 방법 💡
-            </button>
-            <button
-              class="quick-reply"
-              data-topic="이민준비"
-              id="btnPrep"
-              data-topic="이민을 준비하시는 과정에 도움을 드릴 수 있는 법률 정보를 안내해드릴게요."
-            >
-              이민준비 ✔️
-            </button>
-            <button class="quick-reply" data-topic="임대차계약" id="btnLease">
-              임대차 계약 🏠
-            </button>
-            <button class="quick-reply" data-topic="4대보험" id="btnInsurance">
-              4대 보험 ⚖️
-            </button>
-            <button class="quick-reply" data-topic="노동법" id="btnLaborLaw">
-              노동법 💼
-            </button>
-          </div>
           <!-- 사용자 입력창 및 전송 버튼 -->
           <div class="input-row">
             <!-- 언어 변경 및 음성 인식 버튼 -->
