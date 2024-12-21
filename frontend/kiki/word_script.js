@@ -241,21 +241,16 @@ function sendMessage() {
 
   inputField.value = ""; // 입력 필드 초기화
 }
-
 // OpenAI API 호출 함수
 async function getBotResponse(userMessage) {
-  const url =
-    "http://128.134.103.140:8000/ask?question=" +
-    encodeURIComponent(userMessage);
-
-  console.log("request url", url);
+  const response = await fetch(
+    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
+  );
   try {
-    const response = await fetch(url, {
-      method: "GET", // POST를 사용하는 경우 JSON 데이터 설정 필요
-    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    console.log("response", response);
-    // 응답 데이터 파싱
     const data = await response.json();
 
     // API 응답에서 answer 또는 reply 값을 반환
