@@ -1,0 +1,22 @@
+services:
+  app:
+    image: lawbot-app:latest
+    command: ["uvicorn", "src.get_response:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      SEARCH_ENDPOINT: "${SEARCH_ENDPOINT}"
+      SEARCH_API_KEY: "${SEARCH_API_KEY}"
+      AZURE_OPENAI_ENDPOINT: "${AZURE_OPENAI_ENDPOINT}"
+      AZURE_OPENAI_API_KEY: "${AZURE_OPENAI_API_KEY}"
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Windows 절대경로 바인드 예시 (Swarm에서는 상대경로 잘 안 됨)
+      - "C:/docker/ssl:/etc/nginx/ssl:ro"
+      # Nginx 설정파일 (여긴 상대경로도 가능할 수 있지만, 절대경로 권장)
+      - ./nginx/sites-available/lawbot.conf:/etc/nginx/conf.d/lawbot.conf:ro
+    command: ["nginx", "-g", "daemon off;"]
