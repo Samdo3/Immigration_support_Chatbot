@@ -766,8 +766,15 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
     const userMessage = button.textContent;
     const botReply = responses[topic][currentLanguage];
 
-    addMessage(userMessage, "user"); // 버튼 제목을 사용자 메시지로 추가=
-    addMessage(botReply, "bot"); // 선택된 언어에 맞는 답변 추가
+    // 사용자 메시지를 추가하고 해당 메시지로 스크롤
+    const userMessageElement = addMessage(userMessage, "user");
+    userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+
+    // 약간의 지연 후 봇의 대답을 추가 (실시간 대화처럼 보이도록)
+    setTimeout(() => {
+      const botMessageElement = addMessage(botReply, "bot");
+      botMessageElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 1000); // 0.5초 지연
   });
 });
 
@@ -777,9 +784,10 @@ function addMessage(message, sender) {
   const messageElement = document.createElement("div");
   messageElement.classList.add("chat-message", sender);
   messageElement.textContent = message;
+
   chatbox.appendChild(messageElement);
 
-  chatbox.scrollTop = chatbox.scrollHeight; // 최신 메시지로 스크롤 이동
+  return messageElement; // 새로 추가된 메시지 요소 반환
 }
 
 // 메시지 전송 이벤트
@@ -796,18 +804,26 @@ function sendMessage() {
   const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
   if (userMessage === "") return; // 빈 입력 방지
+
   console.log("User Message:", userMessage);
-  // 사용자 메시지를 채팅에 추가
-  addMessage(userMessage, "user");
+  const userMessageElement = addMessage(userMessage, "user");
+
+  // 사용자 메시지를 화면에 표시
+  userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
   // API를 통해 봇 응답 생성
   getBotResponse(userMessage).then((botMessage) => {
     console.log("Bot Message:", botMessage);
-    // 봇의 메시지를 채팅에 추가
-    addMessage(botMessage, "bot");
+    // 봇의 메시지를 약간의 지연 후에 추가
+    setTimeout(() => {
+      const botMessageElement = addMessage(botMessage, "bot");
 
-    // 대화 기록 요약 및 저장 (선택적 기능)
-    saveConversationAndSummarize(userMessage, botMessage);
+      // 봇 메시지를 화면에 표시
+      botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      // 대화 기록 요약 및 저장 (선택적 기능)
+      saveConversationAndSummarize(userMessage, botMessage);
+    }, 500); // 0.5초 지연
   });
 
   inputField.value = ""; // 입력 필드 초기화
@@ -1171,3 +1187,5 @@ logBtn.addEventListener("click", () => {
   // 메시지 선택 활성화 (log-btn 클릭 시에만)
   enableMessageSelection();
 });
+
+// -----------------------로그인 ---------------------//

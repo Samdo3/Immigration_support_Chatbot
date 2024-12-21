@@ -4,7 +4,7 @@ document.getElementById("btnword").addEventListener("click", () => {
 });
 
 document.getElementById("btnmain").addEventListener("click", () => {
-  // main.html 파일 열기
+  // index.html 파일 열기
   window.location.href = "index.html";
 });
 
@@ -190,15 +190,17 @@ document.getElementById("languageList").addEventListener("click", (event) => {
 });
 
 //---------------------------채팅--------------------/
+
 //과거 대화 AI 요약 및 저장 기능을 추가한..
 // 메시지 추가 함수
 function addMessage(message, sender) {
   const messageElement = document.createElement("div");
   messageElement.classList.add("chat-message", sender);
   messageElement.textContent = message;
+
   chatbox.appendChild(messageElement);
 
-  chatbox.scrollTop = chatbox.scrollHeight; // 최신 메시지로 스크롤 이동
+  return messageElement; // 새로 추가된 메시지 요소 반환
 }
 
 // 메시지 전송 이벤트
@@ -215,18 +217,26 @@ function sendMessage() {
   const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
   if (userMessage === "") return; // 빈 입력 방지
+
   console.log("User Message:", userMessage);
-  // 사용자 메시지를 채팅에 추가
-  addMessage(userMessage, "user");
+  const userMessageElement = addMessage(userMessage, "user");
+
+  // 사용자 메시지를 화면에 표시
+  userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
   // API를 통해 봇 응답 생성
   getBotResponse(userMessage).then((botMessage) => {
     console.log("Bot Message:", botMessage);
-    // 봇의 메시지를 채팅에 추가
-    addMessage(botMessage, "bot");
+    // 봇의 메시지를 약간의 지연 후에 추가
+    setTimeout(() => {
+      const botMessageElement = addMessage(botMessage, "bot");
 
-    // 대화 기록 요약 및 저장 (선택적 기능)
-    saveConversationAndSummarize(userMessage, botMessage);
+      // 봇 메시지를 화면에 표시
+      botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      // 대화 기록 요약 및 저장 (선택적 기능)
+      saveConversationAndSummarize(userMessage, botMessage);
+    }, 500); // 0.5초 지연
   });
 
   inputField.value = ""; // 입력 필드 초기화

@@ -21,6 +21,21 @@ body {
   background-color: #101fa7;
   border-radius: 30px;
 }
+.login-btn {
+  position: fixed;
+  font-size: 1.5em; /* 글자 크기 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  background-color: #bee7ff;
+  transition: background-color 0.3s;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  width: 3.5vw; /* 버튼의 가로 크기 */
+  height: 6vh; /* 버튼의 세로 크기 */
+  top: 4%;
+  left: 2%;
+}
 
 .logo {
   background-image: url("src/lawbot.jpg");
