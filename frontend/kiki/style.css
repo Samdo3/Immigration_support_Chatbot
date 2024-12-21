@@ -3,7 +3,7 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   background-color: #f2faff;
   position: fixed;
 }
@@ -22,21 +22,6 @@ body {
   border-radius: 30px;
 }
 
-.login-btn {
-  position: fixed;
-  font-size: 1.5em; /* 글자 크기 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  background-color: #bee7ff;
-  transition: background-color 0.3s;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 1;
-  width: 3.5vw; /* 버튼의 가로 크기 */
-  height: 6vh; /* 버튼의 세로 크기 */
-  top: 4%;
-  left: 2%;
-}
 .logo {
   background-image: url("src/lawbot.jpg");
   background-size: cover;
@@ -47,14 +32,14 @@ body {
   margin-top: 20px;
   margin-left: 25px;
   margin-bottom: 30px;
-  width: 9vw;
-  height: 8vh;
+  width: 12.7vw;
+  height: 7.5vh;
   position: relative;
 }
 
 .word-btn,
 .main-btn {
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   background-color: #83d1ff; /* 활성화된 버튼 색상 */
   position: absolute;
   color: black;
@@ -134,7 +119,7 @@ body {
 
 .chat-message.bot {
   align-self: flex-start;
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   background-color: #bee7ff;
   border: none;
   font-size: 1.3em;
@@ -144,7 +129,7 @@ body {
 
 .chat-message.user {
   align-self: flex-end;
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   background-color: #f2faff;
   border: none;
   font-size: 1.3em;
@@ -155,6 +140,17 @@ body {
 .chat-message.selected {
   border: none; /* 선택된 메시지에 테두리 추가 */
   background-color: #d3ffd3; /* 선택된 메시지 색상 변경 */
+}
+.audio-button {
+  font-size: 1.5em; /* 글자 크기 */
+  background-color: #bee7ff;
+  transition: background-color 0.3s;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  width: 3.5vw; /* 버튼의 가로 크기 */
+  height: 6vh; /* 버튼의 세로 크기 */
 }
 
 /* ------------------------------------------------------------------*/
@@ -187,7 +183,7 @@ body {
   margin-bottom: 1vh;
 }
 .quick-reply {
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   font-size: 1.3em;
   cursor: pointer;
   background-color: #bee7ff;
@@ -345,7 +341,7 @@ body {
 }
 
 #languageList li {
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   margin: 10px 0;
   padding: 10px;
   background-color: #f4f4f9;
@@ -379,7 +375,7 @@ body {
 
 .input-box {
   position: fixed;
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   width: 67%;
   height: 8vh;
   bottom: 8%;
@@ -402,7 +398,7 @@ body {
 /* 전송 버튼 */
 .send-btn {
   position: fixed;
-  /* font-family: "NanumSquareLight", sans-serif; */
+  /* font-family: "NanumGothic", sans-serif; */
   background-color: #bee7ff;
   border: none;
   border-radius: 10vh;
