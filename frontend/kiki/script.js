@@ -818,6 +818,16 @@ function sendMessage() {
     setTimeout(() => {
       const botMessageElement = addMessage(botMessage, "bot");
 
+      const voiceButton = document.createElement("button");
+      voiceButton.textContent = "🎧";
+      voiceButton.className = "audio-button";
+      voiceButton.addEventListener("click", () => {
+        const utterance = new SpeechSynthesisUtterance(botMessage);
+        speechSynthesis.speak(utterance);
+      });
+
+      botMessageElement.appendChild(voiceButton);
+
       // 봇 메시지를 화면에 표시
       botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
@@ -831,14 +841,14 @@ function sendMessage() {
 
 // OpenAI API 호출 함수
 async function getBotResponse(userMessage) {
-  const url = "https://lawbot.asuscomm.com/" + encodeURIComponent(userMessage);
-
+  const response = await fetch(
+    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
+  );
   try {
-    const response = await fetch(url, {
-      method: "GET", // POST를 사용하는 경우 JSON 데이터 설정 필요
-    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    // 응답 데이터 파싱
     const data = await response.json();
 
     // API 응답에서 answer 또는 reply 값을 반환
