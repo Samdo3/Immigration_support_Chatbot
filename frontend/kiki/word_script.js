@@ -241,16 +241,21 @@ function sendMessage() {
 
   inputField.value = ""; // 입력 필드 초기화
 }
+
 // OpenAI API 호출 함수
 async function getBotResponse(userMessage) {
-  const response = await fetch(
-    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
-  );
-  try {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+  const url =
+    "http://128.134.103.140:8000/ask?question=" +
+    encodeURIComponent(userMessage);
 
+  console.log("request url", url);
+  try {
+    const response = await fetch(url, {
+      method: "GET", // POST를 사용하는 경우 JSON 데이터 설정 필요
+    });
+
+    console.log("response", response);
+    // 응답 데이터 파싱
     const data = await response.json();
 
     // API 응답에서 answer 또는 reply 값을 반환
@@ -270,6 +275,19 @@ const historyModal = document.getElementById("historyModal");
 const closeHistoryModal = document.getElementById("closeHistoryModal");
 const btnList = document.getElementById("btnlist");
 const historyList = document.getElementById("historyList");
+
+function fetchConversationHistory() {
+  fetch(
+    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
+  ) // 여기에 실제 API URL을 입력하세요
+    .then((response) => response.json())
+    .then((data) => {
+      conversationHistory = data; // API 응답을 히스토리로 저장
+      saveHistoryToLocalStorage(); // 로컬 스토리지에도 저장
+      renderHistory(); // 히스토리 렌더링
+    })
+    .catch((error) => console.error("대화 히스토리 불러오기 실패:", error));
+}
 
 // 대화 히스토리 저장소 (예제 데이터)
 let conversationHistory = [
