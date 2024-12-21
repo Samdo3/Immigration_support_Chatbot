@@ -1,3 +1,41 @@
+# 1. 민감 정보 / 환경 변수
+.env
+*.env
 /backend/.env
+api_key.env
+secret_*.json
+
+# 2. 빌드 산출물
+/dist
+/build
+/out
+*.exe
+*.pyc
+__pycache__/
+
+# Python venv
+venv/
+.venv/
+
+# node_modules
+node_modules/
+
+# 3. OS / 에디터 / 임시파일
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+*.log
+
+# 4. Docker 민감 폴더
 letsencrypt/
 nginx/
+docker/secrets/
+
+
+# 5. 기타 특정 폴더
+# (예: db_data/ 처럼 로컬 DB 볼륨 폴더)
+
+
