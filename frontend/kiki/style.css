@@ -22,6 +22,21 @@ body {
   border-radius: 30px;
 }
 
+.login-btn {
+  position: fixed;
+  font-size: 1.5em; /* 글자 크기 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  background-color: #bee7ff;
+  transition: background-color 0.3s;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  width: 3.5vw; /* 버튼의 가로 크기 */
+  height: 6vh; /* 버튼의 세로 크기 */
+  top: 4%;
+  left: 2%;
+}
 .logo {
   background-image: url("src/lawbot.jpg");
   background-size: cover;
@@ -65,7 +80,6 @@ body {
   background-color: #bee7ff; /* 활성화된 버튼 색상 */
 }
 .list-btn {
-  /* font-family: "NanumSquareLight", sans-serif; */
   position: fixed;
   font-size: 1.5em; /* 글자 크기 */
   text-align: center; /* 텍스트 중앙 정렬 */
@@ -75,9 +89,9 @@ body {
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
-  top: 9%;
   width: 3.5vw; /* 버튼의 가로 크기 */
   height: 6vh; /* 버튼의 세로 크기 */
+  top: 9%;
   right: 9%;
 }
 
@@ -172,7 +186,6 @@ body {
   bottom: 17.5%;
   margin-bottom: 1vh;
 }
-
 .quick-reply {
   /* font-family: "NanumSquareLight", sans-serif; */
   font-size: 1.3em;
