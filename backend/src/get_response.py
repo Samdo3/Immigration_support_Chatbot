@@ -132,7 +132,7 @@ def ask_legal_question(user_input, index_name, semantic_name):
     print(f"\nTranslated question for search: {translated_question}")
 
     headers = {"Content-Type": "application/json", "api-key": AZURE_OPENAI_API_KEY}
-    prompt = f"Question: {translated_question}\nAnswer: Please answer this question specifically based on Korean law."
+    prompt = f"Question: {translated_question}\nAnswer: Provide an answer using retrieved documents."
 
     payload = {
         "messages": [
