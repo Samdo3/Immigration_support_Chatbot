@@ -1,118 +1,118 @@
+// ---------------------잔상 제거하고 홈페이지 이동 / 애니메이션 효과 추가 ---------------------//
+
+// btnword 클릭 시
 document.getElementById("btnword").addEventListener("click", () => {
+  const languageModal = document.getElementById("languageModal");
+
+  // 모달 숨기기
+  if (languageModal) {
+    languageModal.style.display = "none";
+  }
   // Word.html 파일 열기
   window.location.href = "word.html";
 });
 
+// btnmain 클릭 시
 document.getElementById("btnmain").addEventListener("click", () => {
+  const languageModal = document.getElementById("languageModal");
+
+  // 모달 숨기기
+  if (languageModal) {
+    languageModal.style.display = "none";
+  }
+
   // index.html 파일 열기
   window.location.href = "index.html";
 });
 
-//----------------------언어 변경 -------------------------//
+document.addEventListener("DOMContentLoaded", () => {
+  const languageModal = document.getElementById("languageModal");
 
+  // 페이지 로드 시 모달 숨기기
+  if (languageModal) {
+    languageModal.style.display = "none";
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in"); // 페이지 로드 후 fade-in 애니메이션 적용
+});
+
+//----------------------언어 변경 -------------------------//
 // 언어별 번역 데이터
 const translations = {
   ko: {
     welcomeMessage: "안녕하세요! 무엇을 도와드릴까요?",
-    btnguide: "사용 방법 💡",
-    btnprep: "이민준비 ✔️",
-    btnLease: "임대차 계약 🏠",
-    btnInsurance: "4대 보험 ⚖️",
-    btnLaborLaw: "노동법 💼",
     btnsend: "전송",
-    btnanswer: "질문을 입력해주세요 !",
+    instructionText:
+      "저장하고 싶은 대화를 선택하고 하단에 제목을 입력해주세요. 우측의 확인 버튼을 클릭 시 응답이 저장됩니다.",
+    confirmBtnText: "확인",
   },
   en: {
     welcomeMessage: "Hello! How can I assist you?",
-    btnguide: "How to use💡",
-    btnprep: "PREP for immigrate✔️",
-    btnLease: "Lease Agreement 🏠",
-    btnInsurance: "4 Major Insurances ⚖️",
-    btnLaborLaw: "Labor Law 💼",
     btnsend: "Send",
-    btnanswer: "Please enter your answer!",
+    instructionText:
+      "Select the conversation you want to save and enter a title below. Clicking the confirm button on the right will save the response.",
+    confirmBtnText: "OK",
   },
   hi: {
     welcomeMessage: "नमस्ते! मैं आपकी किस प्रकार मदद कर सकता हूँ?",
-    btnguide: " उपयोग विधि 💡",
-    btnprep: "प्रवासन तैयारी ✔️",
-    btnLease: "पट्टा समझौता 🏠",
-    btnInsurance: "4 प्रमुख बीमा ⚖️",
-    btnLaborLaw: "श्रम कानून 💼",
     btnsend: "भेजना",
-    btnanswer: "कृपया अपना प्रश्न दर्ज करें!",
+    instructionText:
+      "आप जिस बातचीत को सहेजना चाहते हैं, उसे चुनें और नीचे एक शीर्षक दर्ज करें। दाहिने ओर पुष्टि बटन पर क्लिक करने से प्रतिक्रिया सहेज ली जाएगी।",
+    confirmBtnText: "ठीक है",
   },
   vi: {
     welcomeMessage: "Xin chào! Tôi có thể giúp gì cho bạn?",
-    btnguide: "Cách sử dụng 💡",
-    btnprep: "Chuẩn bị nhập cư ✔️",
-    btnLease: "Hợp đồng thuê nhà 🏠",
-    btnInsurance: "4 Bảo hiểm chính ⚖️",
-    btnLaborLaw: "Luật lao động 💼",
-    btnsend: "gửi",
-    btnanswer: "Vui lòng nhập câu hỏi của bạn!",
+    btnsend: "Gửi",
+    instructionText:
+      "Chọn cuộc trò chuyện bạn muốn lưu và nhập tiêu đề bên dưới. Bấm nút xác nhận bên phải để lưu phản hồi.",
+    confirmBtnText: "Xác nhận",
   },
   ru: {
     welcomeMessage: "Здравствуйте! Как я могу помочь вам?",
-    btnguide: "Способ использования 💡",
-    btnprep: "Подготовка к иммиграции ✔️",
-    btnLease: "Договор аренды 🏠",
-    btnInsurance: "4 основных страхования ⚖️",
-    btnLaborLaw: "Трудовое законодательство 💼",
-    btnsend: "отправлять",
-    btnanswer: "Пожалуйста, введите свой ответ!",
+    btnsend: "Отправить",
+    instructionText:
+      "Выберите беседу, которую хотите сохранить, и введите заголовок ниже. Нажатие кнопки подтверждения справа сохранит ответ.",
+    confirmBtnText: "ОК",
   },
   zh: {
     welcomeMessage: "你好！我能为你做些什么？",
-    btnguide: "使用方法 💡",
-    btnprep: "移民准备 ✔️",
-    btnLease: "租赁协议 🏠",
-    btnInsurance: "四大保险 ⚖️",
-    btnLaborLaw: "劳动法 💼",
     btnsend: "发送",
-    btnanswer: "请输入您的答案!",
+    instructionText:
+      "选择您要保存的对话并在下方输入标题。点击右侧的确认按钮将保存响应。",
+    confirmBtnText: "确定",
   },
   th: {
     welcomeMessage: "สวัสดี! ฉันช่วยอะไรคุณได้บ้าง?",
-    btnguide: "วิธีการใช้งาน💡",
-    btnprep: "เตรียมตัวสำหรับการย้าย✔️",
-    btnLease: "สัญญาเช่า 🏠",
-    btnInsurance: "ประกันหลัก 4 อย่าง ⚖️",
-    btnLaborLaw: "กฎหมายแรงงาน 💼",
     btnsend: "ส่ง",
-    btnanswer: "กรุณาป้อนคำตอบของคุณ!",
+    instructionText:
+      "เลือกการสนทนาที่คุณต้องการบันทึกและกรอกหัวข้อด้านล่าง การคลิกปุ่มยืนยันที่ด้านขวาจะบันทึกการตอบกลับ",
+    confirmBtnText: "ตกลง",
   },
   uz: {
     welcomeMessage: "Salom! Qanday yordam bera olaman?",
-    btnguide: "Qanday foydalanish💡",
-    btnprep: "Immigratsiya uchun tayyorgarlik✔️",
-    btnLease: "Ijara shartnomasi 🏠",
-    btnInsurance: "4 Asosiy sug'urta ⚖️",
-    btnLaborLaw: "Mehnat qonuni 💼",
     btnsend: "Yuborish",
-    btnanswer: "Iltimos, javobingizni kiriting!",
+    instructionText:
+      "Saqlamoqchi bo'lgan suhbatni tanlang va quyida sarlavha kiriting. O'ngdagi tasdiqlash tugmasini bosish javobni saqlaydi.",
+    confirmBtnText: "OK",
   },
   tl: {
     welcomeMessage: "Kamusta! Paano kita matutulungan?",
-    btnguide: "Paano gamitin💡",
-    btnprep: "Maghanda para sa paglipat✔️",
-    btnLease: "Kasunduan sa Pag-upa 🏠",
-    btnInsurance: "4 Pangunahing Insurance ⚖️",
-    btnLaborLaw: "Batas sa Paggawa 💼",
     btnsend: "Ipadala",
-    btnanswer: "Pakilagay ang iyong sagot!",
+    instructionText:
+      "Piliin ang pag-uusap na nais mong i-save at maglagay ng pamagat sa ibaba. I-click ang confirm na button sa kanan upang i-save ang sagot.",
+    confirmBtnText: "OK",
   },
   ja: {
     welcomeMessage: "こんにちは！どのようにお手伝いできますか？",
-    btnguide: "使い方💡",
-    btnprep: "移住準備✔️",
-    btnLease: "賃貸契約 🏠",
-    btnInsurance: "主要な4つの保険 ⚖️",
-    btnLaborLaw: "労働法 💼",
     btnsend: "送信",
-    btnanswer: "回答を入力してください！",
+    instructionText:
+      "保存したい会話を選択し、下にタイトルを入力してください。右側の確認ボタンをクリックすると、返信が保存されます。",
+    confirmBtnText: "確認",
   },
 };
+
 // 현재 언어
 let currentLanguage = "ko";
 
@@ -153,19 +153,26 @@ languageList.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  updateLanguage();
+});
+
 // 화면 언어 업데이트 함수
 function updateLanguage() {
   const langData = translations[currentLanguage];
-  addMessage(langData.welcomeMessage, "bot");
 
-  // 각 요소의 텍스트를 업데이트
-
-  document.getElementById("btnGuide").textContent = langData.btnguide;
-  document.getElementById("btnPrep").textContent = langData.btnprep;
-  document.getElementById("btnLease").textContent = langData.btnLease;
-  document.getElementById("btnInsurance").textContent = langData.btnInsurance;
-  document.getElementById("btnLaborLaw").textContent = langData.btnLaborLaw;
   document.getElementById("sendButton").textContent = langData.btnsend;
+  // 'log-container' 텍스트 업데이트
+  const instructionText = document.querySelector(".instruction-text");
+  const confirmBtn = document.querySelector(".input-button-container button");
+
+  if (instructionText) {
+    instructionText.textContent = langData.instructionText;
+  }
+
+  if (confirmBtn) {
+    confirmBtn.textContent = langData.confirmBtnText;
+  }
 }
 
 // 언어 선택 변경 이벤트
@@ -180,18 +187,38 @@ function addMessage(text, type) {
 
   // 채팅 영역에 추가
   chatContainer.appendChild(messageBox);
+
+  // 사용자 메시지를 화면에 표시 후, 스크롤을 맨 아래로
+  messageBox.scrollIntoView({ behavior: "smooth", block: "end" });
 }
+
 document.getElementById("languageList").addEventListener("click", (event) => {
-  const selectedLang = event.target.getAttribute("data-lang");
-  if (selectedLang) {
-    currentLanguage = selectedLang;
-    addMessage(`${event.target.textContent}`, "bot");
+  if (event.target.tagName === "LI") {
+    // 클릭된 요소가 <li>인지 확인
+    const selectedLang = event.target.getAttribute("data-lang");
+    if (selectedLang) {
+      currentLanguage = selectedLang; // 선택된 언어로 업데이트
+      const langData = translations[currentLanguage]; // 해당 언어의 데이터 가져오기
+
+      // 첫 번째 메시지: 선택된 언어 이름을 봇 메시지로 추가
+      addMessage(`${event.target.textContent}`, "bot");
+
+      // 두 번째 메시지: 언어에 맞는 welcomeMessage를 봇 메시지로 추가
+      setTimeout(() => {
+        const botMessageElement = addMessage(langData.welcomeMessage, "bot");
+        botMessageElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        }); // 처음으로 돌아가게 설정
+      }, 100); // 약간의 지연 후 추가 (0.3초)
+
+      // 언어 모달 닫기
+      languageModal.style.display = "none";
+    }
   }
 });
 
 //---------------------------채팅--------------------/
-
-//과거 대화 AI 요약 및 저장 기능을 추가한..
 // 메시지 추가 함수
 function addMessage(message, sender) {
   const messageElement = document.createElement("div");
@@ -231,21 +258,64 @@ function sendMessage() {
     setTimeout(() => {
       const botMessageElement = addMessage(botMessage, "bot");
 
-      // 봇 메시지를 화면에 표시
-      botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+      // 음성 버튼 생성
+      const voiceButton = document.createElement("button");
+      voiceButton.textContent = "🎧"; // 초기 아이콘 설정
+      voiceButton.className = "audio-button";
 
-      // 대화 기록 요약 및 저장 (선택적 기능)
+      // 음성 읽기 및 중지 상태 관리
+      let isSpeaking = false;
+      const utterance = new SpeechSynthesisUtterance(botMessage);
+
+      voiceButton.addEventListener("click", () => {
+        if (isSpeaking) {
+          // 음성 중지
+          speechSynthesis.cancel();
+          isSpeaking = false;
+          voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
+        } else {
+          // 음성 읽기
+          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          speechSynthesis.speak(utterance); // 새로 읽기 시작
+          isSpeaking = true;
+          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
+
+          // 음성이 끝나면 상태 초기화
+          utterance.onend = () => {
+            isSpeaking = false;
+            voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
+          };
+        }
+      });
+
+      // 봇 메시지와 버튼을 포함할 컨테이너 생성
+      const botMessageContainer = document.createElement("div");
+      botMessageContainer.classList.add("bot-message-container");
+      botMessageContainer.appendChild(botMessageElement);
+      botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
+
+      // 컨테이너를 채팅박스에 추가
+      const chatbox = document.getElementById("chatbox");
+      chatbox.appendChild(botMessageContainer);
+
+      // 봇 메시지를 화면에 표시
+      botMessageContainer.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      // 대화 기록 요약 및 저장
       saveConversationAndSummarize(userMessage, botMessage);
-    }, 500); // 0.5초 지연
+    }); // 0.5초 지연
   });
 
   inputField.value = ""; // 입력 필드 초기화
 }
 
+// ------------------------API 불러오기 --------------------------//
 // OpenAI API 호출 함수
 async function getBotResponse(userMessage) {
   const response = await fetch(
-    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
+    `https://lawbot.ddns.net/ask/keyword?question=${encodeURIComponent(
+      userMessage
+    )}`
   );
   try {
     if (!response.ok) {
@@ -264,130 +334,9 @@ async function getBotResponse(userMessage) {
   }
 }
 
-// ------------예린님 압정 ! ---------------//
-/*--------------------------------------------과거 대화 part-------------------------------------------------------------------------------------*/
-// 과거 대화 모달 관련 DOM 요소
-const historyModal = document.getElementById("historyModal");
-const closeHistoryModal = document.getElementById("closeHistoryModal");
-const btnList = document.getElementById("btnlist");
-const historyList = document.getElementById("historyList");
-
-function fetchConversationHistory() {
-  fetch(
-    `https://lawbot.ddns.net/ask?question=${encodeURIComponent(userMessage)}`
-  ) // 여기에 실제 API URL을 입력하세요
-    .then((response) => response.json())
-    .then((data) => {
-      conversationHistory = data; // API 응답을 히스토리로 저장
-      saveHistoryToLocalStorage(); // 로컬 스토리지에도 저장
-      renderHistory(); // 히스토리 렌더링
-    })
-    .catch((error) => console.error("대화 히스토리 불러오기 실패:", error));
-}
-
-// 대화 히스토리 저장소 (예제 데이터)
-let conversationHistory = [
-  {
-    date: "2024-12-17",
-    summary: "AI 챗봇 사용법 설명",
-    keywords: ["챗봇", "사용법", "AI"],
-    details: "오늘은 AI 챗봇의 사용법과 주요 기능에 대해 논의했습니다.",
-  },
-  {
-    date: "2024-12-16",
-    summary: "프로젝트 일정 논의",
-    keywords: ["프로젝트", "일정", "계획"],
-    details: "프로젝트 일정과 팀의 작업 분담에 대해 논의했습니다.",
-  },
-];
-
-// 초기화: 로컬 스토리지에서 히스토리 불러오기
-document.addEventListener("DOMContentLoaded", () => {
-  const savedHistory = localStorage.getItem("conversationHistory");
-  if (savedHistory) {
-    conversationHistory = JSON.parse(savedHistory); // 저장된 히스토리 로드
-  }
-  historyModal.style.display = "none"; // 모달 숨김
-  console.log("페이지 로드 완료");
-});
-
-// 모달 열기
-btnList.addEventListener("click", () => {
-  renderHistory(); // 대화 목록 렌더링
-  historyModal.style.display = "block"; // 모달 표시
-});
-
-// 모달 닫기
-closeHistoryModal.addEventListener("click", () => {
-  historyModal.style.display = "none"; // 모달 숨김
-});
-
-// 대화 목록 렌더링 함수
-function renderHistory() {
-  if (!historyList) {
-    console.error("historyList 요소를 찾을 수 없습니다.");
-    return;
-  }
-
-  historyList.innerHTML = ""; // 기존 목록 초기화
-  conversationHistory.forEach((item, index) => {
-    const li = document.createElement("li");
-    li.className = "history-item";
-    li.dataset.index = index; // 인덱스 저장
-
-    // 날짜 표시
-    const date = document.createElement("div");
-    date.className = "history-item-date";
-    date.textContent = item.date;
-
-    // 요약 표시
-    const summary = document.createElement("div");
-    summary.className = "history-item-summary";
-    summary.textContent = item.summary;
-
-    // 키워드 표시
-    const keywords = document.createElement("div");
-    keywords.className = "history-item-keywords";
-    keywords.textContent = `키워드: ${item.keywords.join(", ")}`;
-
-    // 항목 구성
-    li.appendChild(date);
-    li.appendChild(summary);
-    li.appendChild(keywords);
-
-    // 클릭 이벤트 추가 (세부 내용 보기)
-    li.addEventListener("click", () => {
-      showDetails(item);
-    });
-
-    historyList.appendChild(li);
-  });
-}
-
-// 대화 세부 내용 표시 함수
-function showDetails(item) {
-  alert(
-    `날짜: ${item.date}\n요약: ${item.summary}\n세부 내용: ${item.details}`
-  );
-}
-
-// 히스토리 업데이트 및 저장 함수
-function saveHistoryToLocalStorage() {
-  localStorage.setItem(
-    "conversationHistory",
-    JSON.stringify(conversationHistory)
-  );
-}
-
-// 새로운 대화 추가 예제
-function addNewConversation(date, summary, keywords, details) {
-  const newConversation = { date, summary, keywords, details };
-  conversationHistory.push(newConversation); // 저장소에 추가
-  saveHistoryToLocalStorage(); // 로컬 스토리지에 저장
-}
 // -------------------음성 인식-----------------//
 if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
-  alert("이 브라우저는 음성 인식을 지원하지 않습니다.");
+  alert("This browser does not support speech recognition.");
 }
 
 const recognition = new (window.SpeechRecognition ||
@@ -405,9 +354,9 @@ recognition.onresult = (event) => {
 };
 
 recognition.onerror = (event) => {
-  console.error("음성 인식 에러:", event.error);
+  console.error("Voice recognition error:", event.error);
   if (event.error === "no-speech") {
-    alert("음성이 인식되지 않았습니다. 다시 시도해주세요.");
+    alert("The voice was not recognized. Please try again.");
   }
 };
 
@@ -453,7 +402,7 @@ function messageSelectionHandler(event) {
 // 선택된 메시지 저장 함수
 function saveMessages(title) {
   if (selectedMessages.length === 0) {
-    alert("저장할 메시지를 선택해주세요.");
+    alert("Please select the message you want to save.");
     return;
   }
 
@@ -463,7 +412,7 @@ function saveMessages(title) {
   selectedMessages = [];
   const allMessages = document.querySelectorAll(".chat-message");
   allMessages.forEach((msg) => msg.classList.remove("selected"));
-  alert("메시지가 저장되었습니다.");
+  alert("Your message has been saved.");
 
   // 제목에 해당하는 버튼 생성
   const createdButton = document.createElement("button");
@@ -543,6 +492,10 @@ function displaySavedMessages(savedMessages) {
     listBtn.style.display = "block"; // list-btn 다시 보이기
   });
 }
+logBtn.addEventListener("mousedown", () => {
+  logBtn.style.backgroundColor = "#bee7ff"; // 클릭 시 배경색 변경
+});
+
 // ------------------- + 버튼 관련 이벤트 -------------//
 logBtn.addEventListener("click", () => {
   inputContainer.style.display = "none"; // 대화 입력창 숨기기
@@ -558,8 +511,6 @@ logBtn.addEventListener("click", () => {
   logContainer.className = "log-container";
 
   const instructionText = document.createElement("div");
-  instructionText.textContent =
-    "저장하고 싶은 대화를 선택하고 하단에 제목을 입력해주세요. 우측의 확인 버튼을 클릭 시 응답이 저장됩니다.";
   instructionText.className = "instruction-text";
   logContainer.appendChild(instructionText);
 
@@ -569,11 +520,9 @@ logBtn.addEventListener("click", () => {
 
   const inputField2 = document.createElement("input");
   inputField2.type = "text";
-  inputField2.placeholder = "제목을 입력하세요";
   inputButtonContainer.appendChild(inputField2);
 
   const confirmBtn = document.createElement("button");
-  confirmBtn.textContent = "확인";
   inputButtonContainer.appendChild(confirmBtn);
 
   // 'closeButton' 추가
@@ -588,6 +537,8 @@ logBtn.addEventListener("click", () => {
   }
   mainContainer.appendChild(logContainer);
   logContainer.appendChild(inputButtonContainer);
+
+  updateLanguage(); // 언어에 맞게 텍스트 업데이트
 
   // closeButton 클릭 시 원래 상태로 돌아가기
   closeButton.addEventListener("click", () => {
@@ -606,7 +557,7 @@ logBtn.addEventListener("click", () => {
       logContainer.remove(); // logContainer 삭제
       inputContainer.style.display = "block"; // input-container 다시 보이기
     } else {
-      alert("제목을 입력해주세요.");
+      alert("No!");
     }
   });
 
