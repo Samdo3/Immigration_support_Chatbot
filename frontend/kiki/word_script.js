@@ -265,8 +265,26 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false;
-      const utterance = new SpeechSynthesisUtterance(botMessage);
+      function createUtterance(text, language) {
+        const voices = speechSynthesis.getVoices();
 
+        // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
+        if (language === "tl") {
+          language = "en"; // 필리핀어 -> 영어
+        } else if (language === "uz") {
+          language = "ru"; // 우즈벡어 -> 러시아어
+        }
+
+        // 대체된 언어에 맞는 음성 가져오기
+        const voice = voices.find((v) => v.lang.startsWith(language)) || null;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
+        utterance.voice = voice;
+        return utterance;
+      }
+
+      // 음성 버튼 클릭 이벤트
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
@@ -276,6 +294,10 @@ function sendMessage() {
         } else {
           // 음성 읽기
           speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(
+            botMessage,
+            currentLanguage // 현재 설정된 언어
+          );
           speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
@@ -308,7 +330,6 @@ function sendMessage() {
 
   inputField.value = ""; // 입력 필드 초기화
 }
-
 // ------------------------API 불러오기 --------------------------//
 // OpenAI API 호출 함수
 async function getBotResponse(userMessage) {
@@ -345,11 +366,25 @@ recognition.lang = "ko-KR";
 
 recognition.onresult = (event) => {
   const transcript = event.results[0][0].transcript;
+
+  // 사용자 메시지를 화면에 표시
   addMessage(transcript, "user");
+
+  // 사용자 메시지 스크롤 효과 추가
+  const userMessageElement = document.querySelector(
+    ".chat-message.user:last-child"
+  );
+  userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
   // 봇 응답 처리
   getBotResponse(transcript).then((botMessage) => {
     addMessage(botMessage, "bot");
+
+    // 봇 응답 메시지 스크롤 효과 추가
+    const botMessageElement = document.querySelector(
+      ".chat-message.bot:last-child"
+    );
+    botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
   });
 };
 
@@ -364,7 +399,6 @@ recognition.onerror = (event) => {
 document.getElementById("voiceButton").addEventListener("click", () => {
   recognition.start();
 });
-
 //------------- 원하는 대화 저장 기능 --------------//
 const chatbox = document.getElementById("chatbox");
 const logBtn = document.querySelector(".log-btn");
