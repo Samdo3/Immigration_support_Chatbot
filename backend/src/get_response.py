@@ -12,7 +12,7 @@ import os
 # Azure OpenAI 및 Azure Search 설정
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
-DEPLOYMENT_NAME = 'gpt-4o'
+DEPLOYMENT_NAME = 'gpt-4o-fine-tune-2024-12-21'
 SEARCH_ENDPOINT = os.getenv("SEARCH_ENDPOINT")
 SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
 SEARCH_INDEX_NAME = "immigrationlaw-index"
