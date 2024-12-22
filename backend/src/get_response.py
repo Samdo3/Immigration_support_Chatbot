@@ -121,10 +121,10 @@ def fallback_to_gpt(question, language):
     else:
         return "An error occurred while generating the fallback response."
 
-def ask_legal_question(user_input):
+def ask_legal_question(user_input, index_name, semantic_name):
     """질문에 대한 응답 반환"""
     print(f"\nProcessing question: {user_input}")
-
+    print(index_name," & ", semantic_name)
     # 언어 감지 및 번역
     detected_language = detect_language(user_input)
     print(f"\nDetected language: {detected_language}")
@@ -132,25 +132,25 @@ def ask_legal_question(user_input):
     print(f"\nTranslated question for search: {translated_question}")
 
     headers = {"Content-Type": "application/json", "api-key": AZURE_OPENAI_API_KEY}
-    prompt = f"Question: {translated_question}\nAnswer: Provide an answer using retrieved documents in Korean."
+    prompt = f"Question: {translated_question}\nAnswer: Provide an answer using retrieved documents."
 
     payload = {
         "messages": [
-            {"role": "system", "content": "You are a multilingual assistant specializing in Korean law. Answer all questions about Korean law in the language of the question."},
+            {"role": "system", "content": "You are a multilingual assistant specializing in Korean law. Generate responses that precisely match the structure, terminology, and details of the provided reference answers while maintaining factual accuracy."},
             {"role": "user", "content": prompt}
         ],
         "data_sources": [
             {"type": "azure_search",
              "parameters": {
                  "endpoint": SEARCH_ENDPOINT,
-                 "index_name": SEARCH_INDEX_NAME,
-                 "semantic_configuration": SEMANTIC_CONFIGURATION,
+                 "index_name": index_name,
+                 "semantic_configuration": semantic_name,
                  "query_type": "semantic",
                  "top_n_documents": 20,
                  "authentication": {"type": "api_key", "key": SEARCH_API_KEY}
              }}
         ],
-        "temperature": 0.7, "max_tokens": 800, "top_p": 0.95
+        "temperature": 0.2, "max_tokens": 1000, "top_p": 0.8, "frequency_penalty": 0.1, "presence_penalty": 0.1
     }
 
     try:
@@ -183,9 +183,15 @@ def ask_legal_question(user_input):
         print(f"Error encountered: {e}")
         return fallback_to_gpt(user_input, detected_language)
 
+
 # FAST API   
-@app.get("/ask")
+@app.get("/ask/immigration")
 def ask_endpoint(question: str):
-    answer=ask_legal_question(question)
+    answer=ask_legal_question(question, "immigrationlaw-index", "immigrationlaw-semantic")
+    return {"answer": answer}
+
+@app.get("/ask/keyword")
+def ask_endpoint(question: str):
+    answer=ask_legal_question(question, "keyword-index", "keyword-semantic")
     return {"answer": answer}
 
