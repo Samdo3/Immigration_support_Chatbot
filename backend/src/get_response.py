@@ -15,8 +15,6 @@ AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 DEPLOYMENT_NAME = 'gpt-4o-fine-tune-2024-12-21'
 SEARCH_ENDPOINT = os.getenv("SEARCH_ENDPOINT")
 SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
-SEARCH_INDEX_NAME = "immigrationlaw-index"
-SEMANTIC_CONFIGURATION = "immigrationlaw-semantic"
 
 # 언어 감지기 초기화
 detector = LanguageDetectorBuilder.from_all_languages().build()
