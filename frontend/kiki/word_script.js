@@ -322,10 +322,7 @@ function sendMessage() {
 
       // 봇 메시지를 화면에 표시
       botMessageContainer.scrollIntoView({ behavior: "smooth", block: "end" });
-
-      // 대화 기록 요약 및 저장
-      saveConversationAndSummarize(userMessage, botMessage);
-    }); // 0.5초 지연
+    });
   });
 
   inputField.value = ""; // 입력 필드 초기화
@@ -446,7 +443,6 @@ function saveMessages(title) {
   selectedMessages = [];
   const allMessages = document.querySelectorAll(".chat-message");
   allMessages.forEach((msg) => msg.classList.remove("selected"));
-  alert("Your message has been saved.");
 
   // 제목에 해당하는 버튼 생성
   const createdButton = document.createElement("button");
