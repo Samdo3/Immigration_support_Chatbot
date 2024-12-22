@@ -2975,8 +2975,8 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false;
-      const utterance = new SpeechSynthesisUtterance(botReply);
 
+      // 음성 버튼 클릭 이벤트
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
@@ -2986,6 +2986,7 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
         } else {
           // 음성 읽기
           speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(botReply, currentLanguage); // 기존 botReply를 사용
           speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
@@ -2997,7 +2998,24 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
           };
         }
       });
+      function createUtterance(text, language) {
+        const voices = speechSynthesis.getVoices();
 
+        // 필리핀어와 우즈벡어는 무조건 영어와 러시아어로 대체
+        if (language === "tl") {
+          language = "en"; // 필리핀어를 영어로 대체
+        } else if (language === "uz") {
+          language = "ru"; // 우즈벡어를 러시아어로 대체
+        }
+
+        // 대체된 언어에 맞는 음성 가져오기
+        const voice = voices.find((v) => v.lang.startsWith(language)) || null;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voice ? voice.lang : language; // 선택된 음성 또는 언어 코드 설정
+        utterance.voice = voice;
+        return utterance;
+      }
       // 봇 메시지 생성
       const botMessageElement = addMessage(botReply, "bot");
 
@@ -3063,9 +3081,27 @@ function sendMessage() {
       voiceButton.className = "audio-button";
 
       // 음성 읽기 및 중지 상태 관리
-      let isSpeaking = false;
-      const utterance = new SpeechSynthesisUtterance(botMessage);
+      let isSpeaking = false; // 언어별 음성 설정 함수
+      function createUtterance(text, language) {
+        const voices = speechSynthesis.getVoices();
 
+        // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
+        if (language === "tl") {
+          language = "en"; // 필리핀어 -> 영어
+        } else if (language === "uz") {
+          language = "ru"; // 우즈벡어 -> 러시아어
+        }
+
+        // 대체된 언어에 맞는 음성 가져오기
+        const voice = voices.find((v) => v.lang.startsWith(language)) || null;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
+        utterance.voice = voice;
+        return utterance;
+      }
+
+      // 음성 버튼 클릭 이벤트
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
@@ -3075,6 +3111,10 @@ function sendMessage() {
         } else {
           // 음성 읽기
           speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(
+            botMessage,
+            currentLanguage // 현재 설정된 언어
+          );
           speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
