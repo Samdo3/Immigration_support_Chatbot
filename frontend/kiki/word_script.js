@@ -366,11 +366,25 @@ recognition.lang = "ko-KR";
 
 recognition.onresult = (event) => {
   const transcript = event.results[0][0].transcript;
+
+  // 사용자 메시지를 화면에 표시
   addMessage(transcript, "user");
+
+  // 사용자 메시지 스크롤 효과 추가
+  const userMessageElement = document.querySelector(
+    ".chat-message.user:last-child"
+  );
+  userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
   // 봇 응답 처리
   getBotResponse(transcript).then((botMessage) => {
     addMessage(botMessage, "bot");
+
+    // 봇 응답 메시지 스크롤 효과 추가
+    const botMessageElement = document.querySelector(
+      ".chat-message.bot:last-child"
+    );
+    botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
   });
 };
 
@@ -385,7 +399,6 @@ recognition.onerror = (event) => {
 document.getElementById("voiceButton").addEventListener("click", () => {
   recognition.start();
 });
-
 //------------- 원하는 대화 저장 기능 --------------//
 const chatbox = document.getElementById("chatbox");
 const logBtn = document.querySelector(".log-btn");
