@@ -256,8 +256,8 @@ function sendMessage() {
     console.log("Bot Message:", botMessage);
     // 봇의 메시지를 약간의 지연 후에 추가
     setTimeout(() => {
-      const botMessageElement = addMessage(botMessage, "bot");
-
+      const botMessageContainer = document.createElement("div");
+      botMessageContainer.classList.add("bot-message-container");
       // 음성 버튼 생성
       const voiceButton = document.createElement("button");
       voiceButton.textContent = "🎧"; // 초기 아이콘 설정
@@ -276,10 +276,10 @@ function sendMessage() {
         } else {
           // 음성 읽기
           speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-          const utterance = createUtterance(botReply, currentLanguage); // 기존 botReply를 사용
+          const utterance = createUtterance(botMessage, currentLanguage); // 한국어로 설정
           speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
-          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
+          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
 
           // 음성이 끝나면 상태 초기화
           utterance.onend = () => {
@@ -291,25 +291,23 @@ function sendMessage() {
       function createUtterance(text, language) {
         const voices = speechSynthesis.getVoices();
 
-        // 필리핀어와 우즈벡어는 무조건 영어와 러시아어로 대체
+        // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
         if (language === "tl") {
-          language = "en"; // 필리핀어를 영어로 대체
+          language = "en"; // 필리핀어 -> 영어
         } else if (language === "uz") {
-          language = "ru"; // 우즈벡어를 러시아어로 대체
+          language = "ru"; // 우즈벡어 -> 러시아어
         }
 
         // 대체된 언어에 맞는 음성 가져오기
         const voice = voices.find((v) => v.lang.startsWith(language)) || null;
 
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = voice ? voice.lang : language; // 선택된 음성 또는 언어 코드 설정
+        utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
         utterance.voice = voice;
         return utterance;
       }
-
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
-      const botMessageContainer = document.createElement("div");
-      botMessageContainer.classList.add("bot-message-container");
+      const botMessageElement = addMessage(botMessage, "bot");
       botMessageContainer.appendChild(botMessageElement);
       botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
 
