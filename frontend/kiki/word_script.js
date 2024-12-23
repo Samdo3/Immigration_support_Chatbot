@@ -276,7 +276,7 @@ function sendMessage() {
         } else {
           // 음성 읽기
           speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-          const utterance = createUtterance(botMessage, currentLanguage); // 한국어로 설정
+          const utterance = createUtterance(botMessage, language); // 한국어로 설정
           speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
