@@ -420,12 +420,6 @@ function addBotMessageWithVoice(botMessage) {
 
     // 음성 읽기 및 중지 상태 관리
     let isSpeaking = false;
-    let voices = [];
-
-    // 음성 리스트 로드가 완료되면 업데이트
-    speechSynthesis.addEventListener("voiceschanged", () => {
-      voices = speechSynthesis.getVoices();
-    });
     function createUtterance(text, language) {
       const voices = speechSynthesis.getVoices();
 
@@ -455,7 +449,7 @@ function addBotMessageWithVoice(botMessage) {
       } else {
         // 음성 읽기
         speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-        const utterance = createUtterance(botMessage, "ko-KR"); // 한국어로 설정
+        const utterance = createUtterance(botMessage, language); // 한국어로 설정
         speechSynthesis.speak(utterance); // 새로 읽기 시작
         isSpeaking = true;
         voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
