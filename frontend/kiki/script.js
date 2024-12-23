@@ -3082,6 +3082,12 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false; // 언어별 음성 설정 함수
+      let voices = [];
+
+      // 음성 리스트 로드가 완료되면 업데이트
+      speechSynthesis.addEventListener("voiceschanged", () => {
+        voices = speechSynthesis.getVoices();
+      });
       function createUtterance(text, language) {
         const voices = speechSynthesis.getVoices();
 
