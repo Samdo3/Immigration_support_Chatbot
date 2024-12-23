@@ -3097,7 +3097,7 @@ function sendMessage() { //=====================================================
 
         // 대체된 언어에 맞는 음성 가져오기
         const voice = voices.find((v) => v.lang.startsWith(language)) || null;
-
+        
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
         utterance.voice = voice;
