@@ -375,13 +375,7 @@ recognition.onresult = (event) => {
 
   // 봇 응답 처리
   getBotResponse(transcript).then((botMessage) => {
-    addMessage(botMessage, "bot");
-
-    // 봇 응답 메시지 스크롤 효과 추가
-    const botMessageElement = document.querySelector(
-      ".chat-message.bot:last-child"
-    );
-    botMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+    addBotMessageWithVoice(botMessage);
   });
 };
 
@@ -396,6 +390,107 @@ recognition.onerror = (event) => {
 document.getElementById("voiceButton").addEventListener("click", () => {
   recognition.start();
 });
+
+function sendMessage() {
+  const inputField = document.getElementById("userInput");
+  const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
+
+  if (userMessage === "") return; // 빈 입력 방지
+
+  console.log("User Message:", userMessage);
+  const userMessageElement = addMessage(userMessage, "user");
+
+  // 사용자 메시지를 화면에 표시
+  userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
+
+  // API를 통해 봇 응답 생성
+  getBotResponse(userMessage).then((botMessage) => {
+    addBotMessageWithVoice(botMessage);
+  });
+
+  inputField.value = ""; // 입력 필드 초기화
+}
+
+function addBotMessageWithVoice(botMessage) {
+  console.log("Bot Message:", botMessage);
+
+  // 봇의 메시지를 약간의 지연 후에 추가
+  setTimeout(() => {
+    const botMessageElement = addMessage(botMessage, "bot");
+
+    // 음성 버튼 생성
+    const voiceButton = document.createElement("button");
+    voiceButton.textContent = "🎧"; // 초기 아이콘 설정
+    voiceButton.className = "audio-button";
+
+    // 음성 읽기 및 중지 상태 관리
+    let isSpeaking = false;
+    function createUtterance(text, language) {
+      const voices = speechSynthesis.getVoices();
+
+      // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
+      if (language === "tl") {
+        language = "en"; // 필리핀어 -> 영어
+      } else if (language === "uz") {
+        language = "ru"; // 우즈벡어 -> 러시아어
+      }
+
+      // 대체된 언어에 맞는 음성 가져오기
+      const voice = voices.find((v) => v.lang.startsWith(language)) || null;
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
+      utterance.voice = voice;
+      return utterance;
+    }
+
+    // 음성 버튼 클릭 이벤트
+    voiceButton.addEventListener("click", () => {
+      if (isSpeaking) {
+        // 음성 중지
+        speechSynthesis.cancel();
+        isSpeaking = false;
+        voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
+      } else {
+        // 음성 읽기
+        speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+        const utterance = createUtterance(botMessage, "ko-KR"); // 한국어로 설정
+        speechSynthesis.speak(utterance); // 새로 읽기 시작
+        isSpeaking = true;
+        voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
+
+        // 음성이 끝나면 상태 초기화
+        utterance.onend = () => {
+          isSpeaking = false;
+          voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
+        };
+      }
+    });
+
+    // 봇 메시지와 버튼을 포함할 컨테이너 생성
+    const botMessageContainer = document.createElement("div");
+    botMessageContainer.classList.add("bot-message-container");
+    botMessageContainer.appendChild(botMessageElement);
+    botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
+
+    // 컨테이너를 채팅박스에 추가
+    const chatbox = document.getElementById("chatbox");
+    chatbox.appendChild(botMessageContainer);
+
+    // 봇 메시지를 화면에 표시
+    botMessageContainer.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, 500);
+}
+
+function addMessage(message, sender) {
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("chat-message", sender);
+  messageElement.textContent = message;
+  const chatbox = document.getElementById("chatbox");
+  chatbox.appendChild(messageElement);
+  return messageElement;
+}
+
 //------------- 원하는 대화 저장 기능 --------------//
 const chatbox = document.getElementById("chatbox");
 const logBtn = document.querySelector(".log-btn");
