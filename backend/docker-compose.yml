@@ -7,6 +7,9 @@ services:
       SEARCH_API_KEY: "${SEARCH_API_KEY}"
       AZURE_OPENAI_ENDPOINT: "${AZURE_OPENAI_ENDPOINT}"
       AZURE_OPENAI_API_KEY: "${AZURE_OPENAI_API_KEY}"
+    logging:
+      driver: "none"
+
   nginx:
     image: nginx:latest
     depends_on:
