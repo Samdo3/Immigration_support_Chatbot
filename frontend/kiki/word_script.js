@@ -256,8 +256,8 @@ function sendMessage() {
     console.log("Bot Message:", botMessage);
     // 봇의 메시지를 약간의 지연 후에 추가
     setTimeout(() => {
-      const botMessageElement = addMessage(botMessage, "bot");
-
+      const botMessageContainer = document.createElement("div");
+      botMessageContainer.classList.add("bot-message-container");
       // 음성 버튼 생성
       const voiceButton = document.createElement("button");
       voiceButton.textContent = "🎧"; // 초기 아이콘 설정
@@ -307,8 +307,7 @@ function sendMessage() {
         return utterance;
       }
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
-      const botMessageContainer = document.createElement("div");
-      botMessageContainer.classList.add("bot-message-container");
+      const botMessageElement = addMessage(botMessage, "bot");
       botMessageContainer.appendChild(botMessageElement);
       botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
 
