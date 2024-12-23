@@ -256,8 +256,8 @@ function sendMessage() {
     console.log("Bot Message:", botMessage);
     // 봇의 메시지를 약간의 지연 후에 추가
     setTimeout(() => {
-      const botMessageContainer = document.createElement("div");
-      botMessageContainer.classList.add("bot-message-container");
+      const botMessageElement = addMessage(botMessage, "bot");
+
       // 음성 버튼 생성
       const voiceButton = document.createElement("button");
       voiceButton.textContent = "🎧"; // 초기 아이콘 설정
@@ -265,32 +265,8 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false;
-
-      // 음성 버튼 클릭 이벤트
-      voiceButton.addEventListener("click", () => {
-        if (isSpeaking) {
-          // 음성 중지
-          speechSynthesis.cancel();
-          isSpeaking = false;
-          voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
-        } else {
-          // 음성 읽기
-          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-          const utterance = createUtterance(botMessage, currentLanguage); // 한국어로 설정
-          speechSynthesis.speak(utterance); // 새로 읽기 시작
-          isSpeaking = true;
-          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
-
-          // 음성이 끝나면 상태 초기화
-          utterance.onend = () => {
-            isSpeaking = false;
-            voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
-          };
-        }
-      });
       function createUtterance(text, language) {
         const voices = speechSynthesis.getVoices();
-        console.log(voice);
 
         // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
         if (language === "tl") {
@@ -307,8 +283,36 @@ function sendMessage() {
         utterance.voice = voice;
         return utterance;
       }
+
+      // 음성 버튼 클릭 이벤트
+      voiceButton.addEventListener("click", () => {
+        if (isSpeaking) {
+          // 음성 중지
+          speechSynthesis.cancel();
+          isSpeaking = false;
+          voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
+        } else {
+          // 음성 읽기
+          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(
+            botMessage,
+            currentLanguage // 현재 설정된 언어
+          );
+          speechSynthesis.speak(utterance); // 새로 읽기 시작
+          isSpeaking = true;
+          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
+
+          // 음성이 끝나면 상태 초기화
+          utterance.onend = () => {
+            isSpeaking = false;
+            voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
+          };
+        }
+      });
+
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
-      const botMessageElement = addMessage(botMessage, "bot");
+      const botMessageContainer = document.createElement("div");
+      botMessageContainer.classList.add("bot-message-container");
       botMessageContainer.appendChild(botMessageElement);
       botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
 
@@ -450,7 +454,7 @@ function addBotMessageWithVoice(botMessage) {
       } else {
         // 음성 읽기
         speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-        const utterance = createUtterance(botMessage, language); // 한국어로 설정
+        const utterance = createUtterance(botMessage, "ko-KR"); // 한국어로 설정
         speechSynthesis.speak(utterance); // 새로 읽기 시작
         isSpeaking = true;
         voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
