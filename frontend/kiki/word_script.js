@@ -256,8 +256,8 @@ function sendMessage() {
     console.log("Bot Message:", botMessage);
     // 봇의 메시지를 약간의 지연 후에 추가
     setTimeout(() => {
-      const botMessageContainer = document.createElement("div");
-      botMessageContainer.classList.add("bot-message-container");
+      const botMessageElement = addMessage(botMessage, "bot");
+
       // 음성 버튼 생성
       const voiceButton = document.createElement("button");
       voiceButton.textContent = "🎧"; // 초기 아이콘 설정
@@ -265,32 +265,8 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false;
-
-      // 음성 버튼 클릭 이벤트
-      voiceButton.addEventListener("click", () => {
-        if (isSpeaking) {
-          // 음성 중지
-          speechSynthesis.cancel();
-          isSpeaking = false;
-          voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
-        } else {
-          // 음성 읽기
-          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-          const utterance = createUtterance(botMessage, currentLanguage); // 한국어로 설정
-          speechSynthesis.speak(utterance); // 새로 읽기 시작
-          isSpeaking = true;
-          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
-
-          // 음성이 끝나면 상태 초기화
-          utterance.onend = () => {
-            isSpeaking = false;
-            voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
-          };
-        }
-      });
       function createUtterance(text, language) {
-        const voices = speechSynthesis.getVoices();
-        console.log(voice);
+        const voices = synth.getVoices();
 
         // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
         if (language === "tl") {
@@ -307,8 +283,36 @@ function sendMessage() {
         utterance.voice = voice;
         return utterance;
       }
+
+      // 음성 버튼 클릭 이벤트
+      voiceButton.addEventListener("click", () => {
+        if (isSpeaking) {
+          // 음성 중지
+          speechSynthesis.cancel();
+          isSpeaking = false;
+          voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
+        } else {
+          // 음성 읽기
+          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(
+            botMessage,
+            currentLanguage // 현재 설정된 언어
+          );
+          speechSynthesis.speak(utterance); // 새로 읽기 시작
+          isSpeaking = true;
+          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
+
+          // 음성이 끝나면 상태 초기화
+          utterance.onend = () => {
+            isSpeaking = false;
+            voiceButton.textContent = "🎧"; // 음성 종료 시 아이콘 초기화
+          };
+        }
+      });
+
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
-      const botMessageElement = addMessage(botMessage, "bot");
+      const botMessageContainer = document.createElement("div");
+      botMessageContainer.classList.add("bot-message-container");
       botMessageContainer.appendChild(botMessageElement);
       botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
 
@@ -348,6 +352,15 @@ async function getBotResponse(userMessage) {
   }
 }
 
+// REST API 언어 탐지 함수 //================================================================================================================================
+async function getLanguage(message) {
+  const response = await fetch(
+    `https://lawbot.ddns.net/ask/lang?message=${encodeURIComponent(message)}`
+  );
+  const data = await response.json();
+  return data.language || data.reply || "죄송합니다, 응답을 생성할 수 없습니다.";
+}
+
 // -------------------음성 인식-----------------//
 if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
   alert("This browser does not support speech recognition.");
@@ -355,9 +368,9 @@ if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
 
 const recognition = new (window.SpeechRecognition ||
   window.webkitSpeechRecognition)();
-recognition.lang = "ko-KR";
 
-recognition.onresult = (event) => {
+
+recognition.onresult = async (event) => {
   const transcript = event.results[0][0].transcript;
 
   // 사용자 메시지를 화면에 표시
@@ -369,10 +382,17 @@ recognition.onresult = (event) => {
   );
   userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
-  // 봇 응답 처리
-  getBotResponse(transcript).then((botMessage) => {
-    addBotMessageWithVoice(botMessage);
-  });
+  // 1) 언어 감지
+  const detectedLanguage = await getLanguage(transcript);
+
+  // 음성 언어
+  recognition.lang = detectedLanguage;
+
+  // 2) 봇 응답 처리
+  const botMessage = await getBotResponse(transcript);
+
+  // 3) 봇 메시지 화면 표시 + 음성 버튼
+  addBotMessageWithVoice(botMessage, detectedLanguage);
 };
 
 recognition.onerror = (event) => {
@@ -387,11 +407,14 @@ document.getElementById("voiceButton").addEventListener("click", () => {
   recognition.start();
 });
 
-function sendMessage() {
+async function sendMessage() {
   const inputField = document.getElementById("userInput");
   const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
   if (userMessage === "") return; // 빈 입력 방지
+
+  // REST API 통해서 언어 탐지
+  const detectedLanguage = await getLanguage(userMessage);
 
   console.log("User Message:", userMessage);
   const userMessageElement = addMessage(userMessage, "user");
@@ -401,13 +424,17 @@ function sendMessage() {
 
   // API를 통해 봇 응답 생성
   getBotResponse(userMessage).then((botMessage) => {
-    addBotMessageWithVoice(botMessage);
+    addBotMessageWithVoice(botMessage,detectedLanguage);
   });
 
   inputField.value = ""; // 입력 필드 초기화
 }
 
-function addBotMessageWithVoice(botMessage) {
+const synth = window.speechSynthesis; // 스피치 객체 선언
+
+let voices = []; // 보이스 목록
+
+function addBotMessageWithVoice(botMessage, detectedLanguage) {
   console.log("Bot Message:", botMessage);
 
   // 봇의 메시지를 약간의 지연 후에 추가
@@ -422,8 +449,11 @@ function addBotMessageWithVoice(botMessage) {
     // 음성 읽기 및 중지 상태 관리
     let isSpeaking = false;
     function createUtterance(text, language) {
-      const voices = speechSynthesis.getVoices();
+      language=language.substring(0, 1)
 
+      voices = synth.getVoices();
+
+      console.log(voices)
       // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
       if (language === "tl") {
         language = "en"; // 필리핀어 -> 영어
@@ -444,14 +474,14 @@ function addBotMessageWithVoice(botMessage) {
     voiceButton.addEventListener("click", () => {
       if (isSpeaking) {
         // 음성 중지
-        speechSynthesis.cancel();
+        synth.cancel();
         isSpeaking = false;
         voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
       } else {
         // 음성 읽기
-        speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-        const utterance = createUtterance(botMessage, language); // 한국어로 설정
-        speechSynthesis.speak(utterance); // 새로 읽기 시작
+        synth.cancel(); // 이전에 재생 중인 음성을 중지
+        const utterance = createUtterance(botMessage, detectedLanguage); // 한국어로 설정
+        synth.speak(utterance); // 새로 읽기 시작
         isSpeaking = true;
         voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
 
