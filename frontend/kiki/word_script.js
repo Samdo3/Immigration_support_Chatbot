@@ -265,38 +265,21 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false;
-      function createUtterance(text, language) {
-        const voices = speechSynthesis.getVoices();
 
-        // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
-        if (language === "tl") {
-          language = "en"; // 필리핀어 -> 영어
-        } else if (language === "uz") {
-          language = "ru"; // 우즈벡어 -> 러시아어
-        }
-
-        // 대체된 언어에 맞는 음성 가져오기
-        const voice = voices.find((v) => v.lang.startsWith(language)) || null;
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
-        utterance.voice = voice;
-        return utterance;
-      }
       // 음성 버튼 클릭 이벤트
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
-          SpeechSynthesisUtterance.cancel();
+          speechSynthesis.cancel();
           isSpeaking = false;
           voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
         } else {
           // 음성 읽기
-          SpeechSynthesisUtterance.cancel(); // 이전에 재생 중인 음성을 중지
-          const utterance = createUtterance(botMessage, currentLanguage); // 한국어로 설정
-          SpeechSynthesisUtterance.speak(utterance); // 새로 읽기 시작
+          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          const utterance = createUtterance(botReply, currentLanguage); // 기존 botReply를 사용
+          speechSynthesis.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
-          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
+          voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
 
           // 음성이 끝나면 상태 초기화
           utterance.onend = () => {
@@ -305,6 +288,24 @@ function sendMessage() {
           };
         }
       });
+      function createUtterance(text, language) {
+        const voices = speechSynthesis.getVoices();
+
+        // 필리핀어와 우즈벡어는 무조건 영어와 러시아어로 대체
+        if (language === "tl") {
+          language = "en"; // 필리핀어를 영어로 대체
+        } else if (language === "uz") {
+          language = "ru"; // 우즈벡어를 러시아어로 대체
+        }
+
+        // 대체된 언어에 맞는 음성 가져오기
+        const voice = voices.find((v) => v.lang.startsWith(language)) || null;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voice ? voice.lang : language; // 선택된 음성 또는 언어 코드 설정
+        utterance.voice = voice;
+        return utterance;
+      }
 
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
       const botMessageContainer = document.createElement("div");
