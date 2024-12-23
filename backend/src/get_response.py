@@ -33,6 +33,7 @@ app.add_middleware(
 def detect_language(text):
     """텍스트의 언어를 감지"""
     detected_language = detector.detect_language_of(text)
+    print(f"언어 탐지 : {detected_language}")
     if detected_language is not None:
         return detected_language.name.lower()  # 언어 이름을 소문자로 반환
     else:
@@ -193,3 +194,8 @@ def ask_endpoint(question: str):
     answer=ask_legal_question(question, "keyword-index", "keyword-semantic")
     return {"answer": answer}
 
+@app.get("/ask/lang")
+def ask_language(message: str):
+    language=detect_language(message)
+    print(f"보내줄 언어 : {language}")
+    return {"language": language}

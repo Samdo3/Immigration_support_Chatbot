@@ -2950,6 +2950,7 @@ and pregnant female workers cannot work overtime.
  `,
   },
 };
+
 //---------------------------채팅--------------------/
 // 자동 응답 버튼 클릭 이벤트
 document.querySelectorAll(".quick-reply").forEach((button) => {
@@ -2980,14 +2981,14 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
-          speechSynthesis.cancel();
+          synth.cancel();
           isSpeaking = false;
           voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
         } else {
           // 음성 읽기
-          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          synth.cancel(); // 이전에 재생 중인 음성을 중지
           const utterance = createUtterance(botReply, currentLanguage); // 기존 botReply를 사용
-          speechSynthesis.speak(utterance); // 새로 읽기 시작
+          synth.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
 
@@ -2998,8 +2999,8 @@ document.querySelectorAll(".quick-reply").forEach((button) => {
           };
         }
       });
-      function createUtterance(text, language) {
-        const voices = speechSynthesis.getVoices();
+      function createUtterance(text, language) {  //createUtterance 3번 (querySelectorAll)
+        const voices = synth.getVoices();
 
         // 필리핀어와 우즈벡어는 무조건 영어와 러시아어로 대체
         if (language === "tl") {
@@ -3055,14 +3056,16 @@ document.getElementById("userInput").addEventListener("keypress", function (e) {
   }
 });
 
+
 // 메시지 전송 함수
-function sendMessage() {
+function sendMessage() { //================================================================================================================================
   const inputField = document.getElementById("userInput");
   const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
   if (userMessage === "") return; // 빈 입력 방지
 
   console.log("User Message:", userMessage);
+
   const userMessageElement = addMessage(userMessage, "user");
 
   // 사용자 메시지를 화면에 표시
@@ -3082,14 +3085,8 @@ function sendMessage() {
 
       // 음성 읽기 및 중지 상태 관리
       let isSpeaking = false; // 언어별 음성 설정 함수
-      let voices = [];
-
-      // 음성 리스트 로드가 완료되면 업데이트
-      speechSynthesis.addEventListener("voiceschanged", () => {
-        voices = speechSynthesis.getVoices();
-      });
-      function createUtterance(text, language) {
-        const voices = speechSynthesis.getVoices();
+      function createUtterance(text, language) {   ///createUtterance 함수 1번 (getBotResponse 이벤트 안안)
+        const voices = synth.getVoices();
 
         // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
         if (language === "tl") {
@@ -3100,7 +3097,7 @@ function sendMessage() {
 
         // 대체된 언어에 맞는 음성 가져오기
         const voice = voices.find((v) => v.lang.startsWith(language)) || null;
-
+        
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
         utterance.voice = voice;
@@ -3111,17 +3108,18 @@ function sendMessage() {
       voiceButton.addEventListener("click", () => {
         if (isSpeaking) {
           // 음성 중지
-          speechSynthesis.cancel();
+          synth.cancel();
           isSpeaking = false;
           voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
         } else {
           // 음성 읽기
-          speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
+          synth.cancel(); // 이전에 재생 중인 음성을 중지
+
           const utterance = createUtterance(
             botMessage,
             currentLanguage // 현재 설정된 언어
           );
-          speechSynthesis.speak(utterance); // 새로 읽기 시작
+          synth.speak(utterance); // 새로 읽기 시작
           isSpeaking = true;
           voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⏹️"로 변경
 
@@ -3175,6 +3173,15 @@ async function getBotResponse(userMessage) {
   }
 }
 
+// REST API 언어 탐지 함수 //================================================================================================================================
+async function getLanguage(message) {
+  const response = await fetch(
+    `https://lawbot.ddns.net/ask/lang?message=${encodeURIComponent(message)}`
+  );
+  const data = await response.json();
+  return data.language || data.reply || "죄송합니다, 응답을 생성할 수 없습니다.";
+}
+
 // -------------------음성 인식-----------------//
 if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
   alert("This browser does not support speech recognition.");
@@ -3182,9 +3189,9 @@ if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
 
 const recognition = new (window.SpeechRecognition ||
   window.webkitSpeechRecognition)();
-recognition.lang = "ko-KR";
 
-recognition.onresult = (event) => {
+
+recognition.onresult = async (event) => {
   const transcript = event.results[0][0].transcript;
 
   // 사용자 메시지를 화면에 표시
@@ -3196,10 +3203,17 @@ recognition.onresult = (event) => {
   );
   userMessageElement.scrollIntoView({ behavior: "smooth", block: "end" });
 
-  // 봇 응답 처리
-  getBotResponse(transcript).then((botMessage) => {
-    addBotMessageWithVoice(botMessage);
-  });
+  // 1) 언어 감지
+  const detectedLanguage = await getLanguage(transcript);
+
+  // 음성 언어
+  recognition.lang = detectedLanguage;
+
+  // 2) 봇 응답 처리
+  const botMessage = await getBotResponse(transcript);
+
+  // 3) 봇 메시지 화면 표시 + 음성 버튼
+  addBotMessageWithVoice(botMessage, detectedLanguage);
 };
 
 recognition.onerror = (event) => {
@@ -3214,13 +3228,17 @@ document.getElementById("voiceButton").addEventListener("click", () => {
   recognition.start();
 });
 
-function sendMessage() {
+async function sendMessage() {
   const inputField = document.getElementById("userInput");
   const userMessage = inputField.value.trim(); // 사용자가 입력한 텍스트
 
   if (userMessage === "") return; // 빈 입력 방지
 
   console.log("User Message:", userMessage);
+
+  // REST API 통해서 언어 탐지
+  const detectedLanguage = await getLanguage(userMessage);//================================================================================================================================
+
   const userMessageElement = addMessage(userMessage, "user");
 
   // 사용자 메시지를 화면에 표시
@@ -3228,15 +3246,18 @@ function sendMessage() {
 
   // API를 통해 봇 응답 생성
   getBotResponse(userMessage).then((botMessage) => {
-    addBotMessageWithVoice(botMessage);
+    addBotMessageWithVoice(botMessage, detectedLanguage);//================================================================================================================================
   });
 
   inputField.value = ""; // 입력 필드 초기화
 }
 
-function addBotMessageWithVoice(botMessage) {
-  console.log("Bot Message:", botMessage);
+const synth = window.speechSynthesis; // 스피치 객체 선언================================================================================================================================
 
+let voices = []; // 보이스 목록================================================================================================================================
+
+function addBotMessageWithVoice(botMessage, detectedLanguage) {
+  console.log("Bot Message:", botMessage);
   // 봇의 메시지를 약간의 지연 후에 추가
   setTimeout(() => {
     const botMessageElement = addMessage(botMessage, "bot");
@@ -3248,37 +3269,42 @@ function addBotMessageWithVoice(botMessage) {
 
     // 음성 읽기 및 중지 상태 관리
     let isSpeaking = false;
-    function createUtterance(text, language) {
-      const voices = speechSynthesis.getVoices();
+    function createUtterance(text, language) {  //createUtterance 함수 2번(addBotMessageWithVoice안의)
+      console.log(language)
+      // english -> en 전처리
+      language=language.substring(0, 1)//================================================================================================================================
 
+      voices = synth.getVoices();//================================================================================================================================
+
+      console.log(voices)
       // 필리핀어와 우즈벡어는 강제로 다른 언어로 대체
       if (language === "tl") {
         language = "en"; // 필리핀어 -> 영어
       } else if (language === "uz") {
         language = "ru"; // 우즈벡어 -> 러시아어
       }
-
       // 대체된 언어에 맞는 음성 가져오기
       const voice = voices.find((v) => v.lang.startsWith(language)) || null;
-
+      
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = voice ? voice.lang : language; // 대체된 언어 코드 설정
       utterance.voice = voice;
       return utterance;
     }
 
-    // 음성 버튼 클릭 이벤트
+    // 음성 버튼 클릭 이벤트 (사용자가 말하는거 인식)
     voiceButton.addEventListener("click", () => {
       if (isSpeaking) {
         // 음성 중지
-        speechSynthesis.cancel();
+        synth.cancel();
         isSpeaking = false;
         voiceButton.textContent = "🎧"; // 버튼 아이콘을 다시 "🎧"로 변경
       } else {
         // 음성 읽기
-        speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지
-        const utterance = createUtterance(botMessage, "ko-KR"); // 한국어로 설정
-        speechSynthesis.speak(utterance); // 새로 읽기 시작
+        synth.cancel(); // 이전에 재생 중인 음성을 중지
+        // console.log(detectedLanguage) // 탐지된 언어
+        const utterance = createUtterance(botMessage, detectedLanguage); // 한국어로 설정
+        synth.speak(utterance); // 새로 읽기 시작
         isSpeaking = true;
         voiceButton.textContent = "⬜️"; // 버튼 아이콘을 "⬜️"로 변경
 
