@@ -148,7 +148,7 @@ def ask_legal_question(user_input, index_name, semantic_name):
                  "authentication": {"type": "api_key", "key": SEARCH_API_KEY}
              }}
         ],
-        "temperature": 0.2, "max_tokens": 1000, "top_p": 0.8, "frequency_penalty": 0.1, "presence_penalty": 0.1
+        "temperature": 0.7, "max_tokens": 4000, "top_p": 0.8,
     }
 
     try:
