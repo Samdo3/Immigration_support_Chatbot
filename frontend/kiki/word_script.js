@@ -340,8 +340,6 @@ function sendMessage() {
       // 봇 메시지와 버튼을 포함할 컨테이너 생성
       const botMessageContainer = document.createElement("div");
       botMessageContainer.classList.add("bot-message-container");
-      const botMessageContainer = document.createElement("div");
-      botMessageContainer.classList.add("bot-message-container");
       botMessageContainer.appendChild(botMessageElement);
       botMessageContainer.appendChild(voiceButton); // 버튼을 오른쪽에 추가
 
