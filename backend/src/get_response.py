@@ -24,7 +24,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://ephemeral-salmiakki-189581.netlify.app/"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -149,7 +149,7 @@ def ask_legal_question(user_input, index_name, semantic_name):
                  "authentication": {"type": "api_key", "key": SEARCH_API_KEY}
              }}
         ],
-        "temperature": 0.7, "max_tokens": 4000, "top_p": 0.8,
+        "temperature": 0.8, "max_tokens": 4000, "top_p": 0.8,
     }
 
     try:
