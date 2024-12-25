@@ -24,7 +24,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ephemeral-salmiakki-189581.netlify.app/"],
+    allow_origins=["https://ephemeral-salmiakki-189581.netlify.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
