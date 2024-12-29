@@ -105,7 +105,7 @@ IMMIGRATION_SUPPORT/
 # 5. 기술 스택 및 구현
 ## 3.1. 주요 기술
 - Azure OpenAI: GPT-4o 모델의 Fine-tuning을 통해 한국 법률 데이터를 학습.
-- Azure AI Search (RAG): 법률 데이터 검색 및 벡터화를 통한 검색 최적화.
+- Azure AI Search (RAG): 법률 데이터 검색 및 의미체계 구성을 통한 검색 최적화.
 - FastAPI: RESTful API 백엔드 개발.
 - Nginx: 리버스 프록시 및 HTTPS 설정.
 - JavaScript: 프론트엔드 UI 및 동적 기능 구현.
