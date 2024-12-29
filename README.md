@@ -65,6 +65,8 @@ IMMIGRATION_SUPPORT/
 │       ├── word_script.js # 법률 용어 검색 js
 │       ├── word_style.css
 │       └── word.html      # 법률 용어 검색 화면
+├── preprocess/
+│   └── documentinteli.ipynb # PDF 전처리 코드 노트북
 ├── LICENSE
 └── README.md
 ```
